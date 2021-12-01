@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "609764870022",
+    "project_id": "cobachatapp",
+    "storage_bucket": "cobachatapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:609764870022:android:20248b04c2653358cd0e07",
+        "android_client_info": {
+          "package_name": "com.example.cobachatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "609764870022-25hotebao0acojidqj2hrcoahropghkp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBchLUaQFDjaFt8zIJEAEWnCKbSV6w5bT4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "609764870022-25hotebao0acojidqj2hrcoahropghkp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
