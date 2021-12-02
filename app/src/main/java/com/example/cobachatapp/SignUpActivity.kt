@@ -1,9 +1,11 @@
 package com.example.cobachatapp
 
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -12,15 +14,14 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import java.lang.NullPointerException
-
-//email: email baca
-//password: 123456
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth:FirebaseAuth
-    private lateinit var databaseReference: DatabaseReference
+    private lateinit var firestore: FirebaseFirestore
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +32,7 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
 
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         val _etName = findViewById<EditText>(R.id.etName)
         val _etEmail = findViewById<EditText>(R.id.etEmail)
@@ -96,31 +98,29 @@ class SignUpActivity : AppCompatActivity() {
                     val user:FirebaseUser? = auth.currentUser
                     val userId:String = user!!.uid
 
-                    databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(userId)
-
-                    val hashMap:HashMap<String, String> = HashMap()
-                    hashMap.put("userId", userId)
-                    hashMap.put("userName", userName)
-                    hashMap.put("profileImage", "")
-                    hashMap.put("desainer", "0")
+                    val data = User(userName, "", userId, "0")
 
                     // Set Display name
                     val profile_updates = UserProfileChangeRequest.Builder().setDisplayName(userName).build()
                     user!!.updateProfile(profile_updates)
 
-                    databaseReference.setValue(hashMap).addOnCompleteListener(this) {
-                        if (it.isSuccessful) {
-
-                            //open home activity
+                    firestore.collection("tbUsers").document(userId)
+                        .set(data)
+                        .addOnSuccessListener {
                             val intent = Intent(this@SignUpActivity, HomeActivity::class.java)
+                            intent.putExtra("current_user", data)
                             startActivity(intent)
+
+                            Log.d("Firestore", "Save data success")
+                            Toast.makeText(applicationContext, "Success creating Firestore reference", Toast.LENGTH_LONG).show()
                         }
-                        else {
-                            Toast.makeText(applicationContext, "Failed to create database reference", Toast.LENGTH_LONG).show()
+                        .addOnFailureListener {
+                            Log.d("Firestore", "Save data failed")
+                            Toast.makeText(applicationContext, "Failed to create Firestore reference", Toast.LENGTH_LONG).show()
                         }
-                    }
                 }
                 else {
+                    Log.d("Auth", "Failed to create user")
                     Toast.makeText(applicationContext, "Failed to create user", Toast.LENGTH_LONG).show()
                 }
             }

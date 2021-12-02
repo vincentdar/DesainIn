@@ -29,7 +29,10 @@ class DesainerProfActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_desainer_profile_page)
         auth = FirebaseAuth.getInstance()
-        getCurrentUserData()
+
+        // Get current user data, make sure the home activity has filtered the null user data
+        current_user = intent.getParcelableExtra("current_user")!!
+
 
         // Upper UI Handler
         val _ivProfile = findViewById<ImageView>(R.id.ivProfile)
@@ -42,6 +45,7 @@ class DesainerProfActivity : AppCompatActivity() {
 
         _btnBack.setOnClickListener {
             val intent = Intent(this@DesainerProfActivity, HomeActivity::class.java)
+            intent.putExtra("current_user", current_user)
             startActivity(intent)
         }
 
@@ -59,41 +63,5 @@ class DesainerProfActivity : AppCompatActivity() {
 
     }
 
-    fun getCurrentUserData() {
-        val user = auth.currentUser
-        if (user != null) {
-            val nama = user.displayName
-            val photo = user.photoUrl
-            val uid = user.uid
-//            var desainer = "2"
 
-//            databaseReference  = databaseReference.child(uid)
-//            databaseReference.get().addOnSuccessListener {
-//                desainer = it.child("desainer").getValue().toString()
-//                Log.d("Firebase Database", "Desainer: " + desainer)
-//            }
-
-//            val userListener = object : ValueEventListener {
-//                override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                    val desainer_value = dataSnapshot.child("desainer").getValue().toString()
-//                    Log.d("Firebase Database", "Desainer: " + desainer_value)
-//                    if (desainer_value == "1") {
-//                        desainer = "1"
-//                    } else {
-//                        desainer = "0"
-//                    }
-//                }
-//
-//                override fun onCancelled(databaseError: DatabaseError) {
-//                    // Getting Post failed, log a message
-//                    Log.d("Firebase Database", "Cancelled Reading Data")
-//                }
-//            }
-//            databaseReference.addListenerForSingleValueEvent(userListener)
-            current_user = User(nama, photo, uid, "0")
-        }
-        else {
-            current_user = User("Guest",  Uri.EMPTY, "", "0")
-        }
-    }
 }

@@ -11,11 +11,13 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
 import java.lang.NullPointerException
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth:FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +33,7 @@ class LoginActivity : AppCompatActivity() {
         val _etPassword = findViewById<EditText>(R.id.etPassword)
 
         auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         _btnLogin.setOnClickListener {
             val email = _etEmail.text.toString()
@@ -43,8 +46,28 @@ class LoginActivity : AppCompatActivity() {
                 auth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this) {
                     if (it.isSuccessful) {
-                        val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                        startActivity(intent)
+                        val user = auth.currentUser
+                        if (user != null) {
+                            val uid = user.uid
+                            firestore.collection("tbUsers").document(uid).get()
+                                .addOnSuccessListener {
+                                    val userName = it.get("userName").toString()
+                                    val userId = it.get("userId").toString()
+                                    val profileImage = it.get("profileImage").toString()
+                                    val desainer = it.get("desainer").toString()
+                                    val data = User(userName, profileImage, userId, desainer)
+                                    Log.d("Firestore", "Success to get current user data")
+                                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                                    intent.putExtra("current_user", data)
+                                    startActivity(intent)
+                                }
+                                .addOnFailureListener {
+                                    Log.d("Firestore", "Failure to get current user data")
+                                    Toast.makeText(applicationContext, "Firestore Failure", Toast.LENGTH_SHORT).show()
+                                }
+
+                        }
+
                     }
                     else {
                         Toast.makeText(applicationContext, "email and password invalid", Toast.LENGTH_SHORT).show()

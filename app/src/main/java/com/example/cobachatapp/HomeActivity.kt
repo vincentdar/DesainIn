@@ -20,8 +20,8 @@ import com.google.android.gms.tasks.Task as Task1
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
-    private lateinit var databaseReference: DatabaseReference
-    private lateinit var current_user: User
+    private var current_user = User("Guest",  "", "", "0")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
@@ -30,14 +30,17 @@ class HomeActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_home)
 
+        val parcel_user = intent.getParcelableExtra<User>("current_user")
+        if (parcel_user != null) {
+            current_user = parcel_user
+        }
+
         val _tvUsername = findViewById<TextView>(R.id.tvUsername)
         val _tvUsertoken = findViewById<TextView>(R.id.tvUsertoken)
         val _tvIsDesainer = findViewById<TextView>(R.id.tvIsDesainer)
         val _btnProfDesainer = findViewById<Button>(R.id.btnProfDesainer)
 
         auth = FirebaseAuth.getInstance()
-        databaseReference  = FirebaseDatabase.getInstance().getReference("Users")
-        getCurrentUserData()
 
         _tvUsername.setText(current_user.userName)
         _tvUsertoken.setText(current_user.userId)
@@ -45,48 +48,12 @@ class HomeActivity : AppCompatActivity() {
 
         _btnProfDesainer.setOnClickListener {
             val intent = Intent(this@HomeActivity, DesainerProfActivity::class.java)
+            intent.putExtra("current_user", current_user)
             startActivity(intent)
         }
-    }
 
+        current_user.desainer?.let { Log.d("Current User", it) }
 
-
-    fun getCurrentUserData() {
-        val user = auth.currentUser
-        if (user != null) {
-            val nama = user.displayName
-            val photo = user.photoUrl
-            val uid = user.uid
-//            var desainer = "2"
-
-//            databaseReference  = databaseReference.child(uid)
-//            databaseReference.get().addOnSuccessListener {
-//                desainer = it.child("desainer").getValue().toString()
-//                Log.d("Firebase Database", "Desainer: " + desainer)
-//            }
-
-//            val userListener = object : ValueEventListener {
-//                override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                    val desainer_value = dataSnapshot.child("desainer").getValue().toString()
-//                    Log.d("Firebase Database", "Desainer: " + desainer_value)
-//                    if (desainer_value == "1") {
-//                        desainer = "1"
-//                    } else {
-//                        desainer = "0"
-//                    }
-//                }
-//
-//                override fun onCancelled(databaseError: DatabaseError) {
-//                    // Getting Post failed, log a message
-//                    Log.d("Firebase Database", "Cancelled Reading Data")
-//                }
-//            }
-//            databaseReference.addListenerForSingleValueEvent(userListener)
-            current_user = User(nama, photo, uid, "0")
-        }
-        else {
-            current_user = User("Guest",  Uri.EMPTY, "", "0")
-        }
     }
 
 

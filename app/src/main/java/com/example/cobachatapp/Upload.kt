@@ -1,13 +1,17 @@
 package com.example.cobachatapp
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import org.w3c.dom.Text
 
 // TODO: Rename parameter arguments, choose names that match
@@ -24,6 +28,14 @@ class Upload : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private val pickImage = 100
+    private var imageUri: Uri? = null
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val intent = result.data
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +59,29 @@ class Upload : Fragment() {
         val _etCaption = view.findViewById<EditText>(R.id.etCaption)
         val _btnUpload = view.findViewById<Button>(R.id.btnUpload)
         val _tvFrUpload = view.findViewById<TextView>(R.id.tvFrUpload)
+        val _btnChooseFile = view.findViewById<Button>(R.id.btnChooseFile)
+        val _ivFile = view.findViewById<ImageView>(R.id.ivFile)
+        val _progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
 
         _btnUpload.setOnClickListener {
             var str = _etCaption.text.toString()
             _tvFrUpload.setText(str)
         }
+
+        _btnChooseFile.setOnClickListener {
+            chooseImage()
+        }
     }
+
+    fun chooseImage() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startForResult.launch(intent)
+    }
+
+
+
+
 
     companion object {
         /**
