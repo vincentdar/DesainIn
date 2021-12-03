@@ -2,9 +2,11 @@ package com.example.cobachatapp
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +14,15 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import org.w3c.dom.Text
+import androidx.core.net.toFile
+import androidx.core.view.isInvisible
+import com.example.cobachatapp.Helper.DateHelper
+import com.example.cobachatapp.Helper.GenerateUUID
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileInputStream
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -28,12 +38,19 @@ class Upload : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-    private val pickImage = 100
-    private var imageUri: Uri? = null
+    private var userId: String? = null
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
+    private var imageURI: Uri = Uri.EMPTY
+    private lateinit var _ivFile: ImageView
     private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         result: ActivityResult ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val intent = result.data
+            val data = result.data
+            _ivFile.setImageURI(data?.data)
+            imageURI = data?.data as Uri
+            Log.d("Gallery", data?.data.toString())
+
         }
     }
 
@@ -42,7 +59,9 @@ class Upload : Fragment() {
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
+            userId = param1
         }
+        Log.d("Upload File", userId.toString())
     }
 
     override fun onCreateView(
@@ -59,17 +78,70 @@ class Upload : Fragment() {
         val _etCaption = view.findViewById<EditText>(R.id.etCaption)
         val _btnUpload = view.findViewById<Button>(R.id.btnUpload)
         val _tvFrUpload = view.findViewById<TextView>(R.id.tvFrUpload)
+        _tvFrUpload.isInvisible = true
         val _btnChooseFile = view.findViewById<Button>(R.id.btnChooseFile)
-        val _ivFile = view.findViewById<ImageView>(R.id.ivFile)
+        _ivFile = view.findViewById<ImageView>(R.id.ivFile)
         val _progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
-
-        _btnUpload.setOnClickListener {
-            var str = _etCaption.text.toString()
-            _tvFrUpload.setText(str)
-        }
 
         _btnChooseFile.setOnClickListener {
             chooseImage()
+        }
+
+        _btnUpload.setOnClickListener {
+            var str = _etCaption.text.toString()
+
+
+            val tanggal = DateHelper.getCurrentDate()
+
+            val post = dcPost(userId, str, tanggal)
+            val uuid = GenerateUUID.generate()
+
+
+
+            firestore.collection("tbPosts").document(uuid)
+                .set(post)
+                .addOnSuccessListener {
+                    Log.d("Firestore", "Successfully add post" + uuid)
+
+                    // Upload to Storage
+                    val bitmap = (_ivFile.drawable as BitmapDrawable).bitmap
+                    val baos = ByteArrayOutputStream()
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+                    val data  = baos.toByteArray()
+
+                    val storageRef = storage.reference
+                    val imageRef = storageRef.child("images/" + uuid )
+
+
+                    var uploadTask = imageRef.putBytes(data)
+                    uploadTask
+                        .addOnSuccessListener {
+                            Toast.makeText(context, "Upload Berhasil", Toast.LENGTH_SHORT).show()
+                            Log.d("Storage", it.metadata.toString())
+                        }
+                        .addOnFailureListener {
+                            // Delete Firestore Posts
+                            firestore.collection("tbPosts").document(uuid)
+                                .delete()
+                                .addOnSuccessListener {
+                                    Toast.makeText(context, "Upload Gagal", Toast.LENGTH_SHORT).show()
+                                }
+                                .addOnFailureListener {
+                                    Toast.makeText(context, "Firebase Bermasalah", Toast.LENGTH_SHORT).show()
+                                    Log.d("Firebase", it.message.toString())
+                                }
+                            Log.d("Storage", it.toString())
+                        }
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Upload Gagal", Toast.LENGTH_SHORT).show()
+                    Log.d("Firestore", it.message.toString())
+                }
+
+
+
+
+
         }
     }
 
@@ -78,10 +150,6 @@ class Upload : Fragment() {
         intent.type = "image/*"
         startForResult.launch(intent)
     }
-
-
-
-
 
     companion object {
         /**

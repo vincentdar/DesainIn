@@ -47,9 +47,17 @@ class HomeActivity : AppCompatActivity() {
         _tvIsDesainer.setText(current_user.desainer)
 
         _btnProfDesainer.setOnClickListener {
-            val intent = Intent(this@HomeActivity, DesainerProfActivity::class.java)
-            intent.putExtra("current_user", current_user)
-            startActivity(intent)
+            if (current_user.desainer == "1") {
+                val intent = Intent(this@HomeActivity, DesainerProfActivity::class.java)
+                intent.putExtra("current_user", current_user)
+                startActivity(intent)
+            }
+            else {
+                val intent = Intent(this@HomeActivity, ClientProfActivity::class.java)
+                intent.putExtra("current_user", current_user)
+                startActivity(intent)
+            }
+
         }
 
         current_user.desainer?.let { Log.d("Current User", it) }
