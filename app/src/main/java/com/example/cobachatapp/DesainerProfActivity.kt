@@ -4,9 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isInvisible
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -30,8 +33,12 @@ class DesainerProfActivity : AppCompatActivity() {
         setContentView(R.layout.activity_desainer_profile_page)
         auth = FirebaseAuth.getInstance()
 
+
         // Get current user data, make sure the home activity has filtered the null user data
         current_user = intent.getParcelableExtra("current_user")!!
+
+        val _btnFollow = findViewById<Button>(R.id.btnFollow)
+        val _tvFollower = findViewById<TextView>(R.id.tvFollower)
 
 
         // Upper UI Handler
@@ -53,7 +60,23 @@ class DesainerProfActivity : AppCompatActivity() {
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager2)
 
-        val adapter = TabProfileAdapter( supportFragmentManager, lifecycle, current_user)
+        var tabs = 1;
+        var authenticated = false
+        auth.currentUser?.uid?.let { Log.d("Authentication", it) }
+        if (auth.currentUser?.uid == current_user.userId) {
+            _btnFollow.isInvisible = true
+            _tvFollower.isInvisible = false
+            authenticated = true
+            tabs = 2
+        }
+        else {
+            _btnFollow.isInvisible = false
+            _tvFollower.isInvisible = true
+            authenticated = false
+            tabs = 1
+        }
+
+        val adapter = TabProfileAdapter( supportFragmentManager, lifecycle, current_user, tabs, authenticated)
         viewPager2.adapter = adapter
 
         val optionsArray = arrayOf("Post", "Upload")

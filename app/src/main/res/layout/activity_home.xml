@@ -28,9 +28,16 @@
         android:text="is Desainer" />
 
     <Button
-        android:id="@+id/btnProfDesainer"
+        android:id="@+id/btnProf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Profile Desainer"
+        android:text="Profile"
+        android:gravity="center"/>
+
+    <Button
+        android:id="@+id/btnDesainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Desainer"
         android:gravity="center"/>
 </LinearLayout>

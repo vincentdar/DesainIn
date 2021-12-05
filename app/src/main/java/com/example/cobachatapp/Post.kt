@@ -24,10 +24,9 @@ private const val ARG_PARAM2 = "param2"
  */
 class Post : Fragment() {
     // TODO: Rename and change types of parameter
-    private var param1: String? = null
-    private var param2: String? = null
-    private var userId: String? = null
-    private var userName: String? = null
+    private var user: User? = null
+    private var authenticated: Boolean? = null
+
 
     // RecyclerView Data
     private var _id = ArrayList<String>()
@@ -46,10 +45,9 @@ class Post : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-            userId = param1
-            userName = param2
+            user = it.getParcelable<User>(ARG_PARAM1)
+            authenticated = it.getBoolean(ARG_PARAM2)
+
         }
     }
 
@@ -80,9 +78,9 @@ class Post : Fragment() {
 
 
                 for (document in result) {
-                    if (document.data.get("userId") == userId) {
+                    if (document.data.get("userId") == user?.userId) {
                         _id.add(document.id)
-                        _username.add(userName.toString())
+                        _username.add(user?.userName.toString())
                         _tanggal.add(document.data.get("tanggal").toString())
                         _caption.add(document.data.get("caption").toString())
                         var b: ByteArray = byteArrayOf(0x0)
@@ -154,7 +152,7 @@ class Post : Fragment() {
 
     fun TampilkanData() {
         _rvPosts.layoutManager = LinearLayoutManager(context)
-        val postsAdapter = PostsAdapter(_dataPosts, _image, _id)
+        val postsAdapter = PostsAdapter(_dataPosts, _image, _id, authenticated!!)
         _rvPosts.adapter = postsAdapter
 
         postsAdapter.SetOnItemClickCallback(object : PostsAdapter.OnItemClickCallback {
@@ -177,11 +175,11 @@ class Post : Fragment() {
          */
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: User, param2: Boolean) =
             Post().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putParcelable(ARG_PARAM1, param1)
+                    putBoolean(ARG_PARAM2, param2)
                 }
             }
     }

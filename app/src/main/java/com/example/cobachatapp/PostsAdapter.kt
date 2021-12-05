@@ -8,11 +8,14 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.RecyclerView
 
 class PostsAdapter (private val listPosts: ArrayList<dcPost>,
                     private val listImages: ArrayList<ByteArray>,
-                    private val listUUID: ArrayList<String>) :
+                    private val listUUID: ArrayList<String>,
+                    private val authenticated: Boolean) :
     RecyclerView.Adapter<PostsAdapter.ListViewHolder>() {
 
     private lateinit var onItemClickCallback : OnItemClickCallback
@@ -55,6 +58,9 @@ class PostsAdapter (private val listPosts: ArrayList<dcPost>,
         holder._ibDelete.setOnClickListener {
             onItemClickCallback.OnItemDelete(listUUID[position])
         }
+        // Gone the delete button if not authenticated
+        holder._ibDelete.isGone = !authenticated
+
     }
 
     override fun getItemCount(): Int {

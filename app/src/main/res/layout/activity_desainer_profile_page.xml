@@ -87,6 +87,28 @@
         app:layout_constraintTop_toBottomOf="@+id/tabLayout" >
     </androidx.viewpager2.widget.ViewPager2>
 
+    <Button
+        android:id="@+id/btnFollow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="Follow"
+        android:visibility="visible"
+        app:layout_constraintStart_toEndOf="@+id/btnChat"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
+
+    <TextView
+        android:id="@+id/tvFollower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Follower: 0"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/btnChat"
+        app:layout_constraintTop_toTopOf="@+id/btnChat" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

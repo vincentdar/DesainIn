@@ -29,6 +29,7 @@ class LoginActivity : AppCompatActivity() {
 
         val _btnSignUp = findViewById<Button>(R.id.btnSignUp)
         val _btnLogin = findViewById<Button>(R.id.btnLogin)
+        val _btnLoginAsGuest = findViewById<Button>(R.id.btnLoginAsGuest)
         val _etEmail = findViewById<EditText>(R.id.etEmail)
         val _etPassword = findViewById<EditText>(R.id.etPassword)
 
@@ -79,6 +80,13 @@ class LoginActivity : AppCompatActivity() {
         _btnSignUp.setOnClickListener {
             val intent = Intent(this@LoginActivity, SignUpActivity::class.java)
             startActivity(intent)
+        }
+
+        _btnLoginAsGuest.setOnClickListener {
+            auth.signOut()
+            val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+            startActivity(intent)
+
         }
     }
 
