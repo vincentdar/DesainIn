@@ -53,7 +53,7 @@ class DesainerProfActivity : AppCompatActivity() {
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager2)
 
-        val adapter = TabProfileAdapter( supportFragmentManager, lifecycle, current_user.userId.toString())
+        val adapter = TabProfileAdapter( supportFragmentManager, lifecycle, current_user)
         viewPager2.adapter = adapter
 
         val optionsArray = arrayOf("Post", "Upload")

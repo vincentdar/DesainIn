@@ -138,10 +138,6 @@ class Upload : Fragment() {
                     Log.d("Firestore", it.message.toString())
                 }
 
-
-
-
-
         }
     }
 

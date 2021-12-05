@@ -6,9 +6,9 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 private const val NUM_TABS = 2
 
-class TabProfileAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, userId: String) :
+class TabProfileAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, user: User) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
-    private var id = userId
+    private var _user = user
 
     override fun getItemCount(): Int {
         return NUM_TABS
@@ -17,8 +17,8 @@ class TabProfileAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, 
     override fun createFragment(position: Int): Fragment {
 
         when (position) {
-            0 -> return Post.newInstance(id, "")
-            1 -> return Upload.newInstance(id, "")
+            0 -> return Post.newInstance(_user.userId.toString(), _user.userName.toString())
+            1 -> return Upload.newInstance(_user.userId.toString(), "")
         }
         return Post()
     }
