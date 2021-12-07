@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseAuth
 class DesainerProfActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var current_user: User
+    lateinit var desainer_user: User
 
     lateinit var tabLayout: TabLayout
     lateinit var viewPager2: ViewPager2
@@ -36,17 +37,37 @@ class DesainerProfActivity : AppCompatActivity() {
 
         // Get current user data, make sure the home activity has filtered the null user data
         current_user = intent.getParcelableExtra("current_user")!!
+        desainer_user = intent.getParcelableExtra("desainer")!!
+
 
         val _btnFollow = findViewById<Button>(R.id.btnFollow)
         val _tvFollower = findViewById<TextView>(R.id.tvFollower)
 
+        var tabs = 1;
+        var authenticated = false
+        var passing_user = current_user
+        auth.currentUser?.uid?.let { Log.d("Authentication", it) }
+        if (current_user.userId == desainer_user.userId) {
+            passing_user = current_user
+            _btnFollow.isInvisible = true
+            _tvFollower.isInvisible = false
+            authenticated = true
+            tabs = 2
+        }
+        else {
+            passing_user = desainer_user
+            _btnFollow.isInvisible = false
+            _tvFollower.isInvisible = true
+            authenticated = false
+            tabs = 1
+        }
 
         // Upper UI Handler
         val _ivProfile = findViewById<ImageView>(R.id.ivProfile)
         _ivProfile.setImageResource(R.drawable.yunjin)
 
         val _tvUsername = findViewById<TextView>(R.id.tvUsername)
-        _tvUsername.setText(current_user.userName)
+        _tvUsername.setText(passing_user.userName)
 
         val _btnBack = findViewById<ImageButton>(R.id.btnBack)
 
@@ -60,23 +81,9 @@ class DesainerProfActivity : AppCompatActivity() {
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager2)
 
-        var tabs = 1;
-        var authenticated = false
-        auth.currentUser?.uid?.let { Log.d("Authentication", it) }
-        if (auth.currentUser?.uid == current_user.userId) {
-            _btnFollow.isInvisible = true
-            _tvFollower.isInvisible = false
-            authenticated = true
-            tabs = 2
-        }
-        else {
-            _btnFollow.isInvisible = false
-            _tvFollower.isInvisible = true
-            authenticated = false
-            tabs = 1
-        }
 
-        val adapter = TabProfileAdapter( supportFragmentManager, lifecycle, current_user, tabs, authenticated)
+
+        val adapter = TabProfileAdapter( supportFragmentManager, lifecycle, passing_user, tabs, authenticated)
         viewPager2.adapter = adapter
 
         val optionsArray = arrayOf("Post", "Upload")

@@ -50,9 +50,15 @@ class PostsAdapter (private val listPosts: ArrayList<dcPost>,
         holder._tvCaption.setText(post.caption)
 
         // Handle Images
-        var images = listImages[position]
-        var bmp : Bitmap = BitmapFactory.decodeByteArray(images, 0, images.size)
-        holder._ivPost.setImageBitmap(bmp)
+        if (listImages[position] != byteArrayOf(0x0)) {
+            var images = listImages[position]
+            var bmp : Bitmap = BitmapFactory.decodeByteArray(images, 0, images.size)
+            holder._ivPost.setImageBitmap(bmp)
+        }
+        else {
+            holder._ivPost.setImageResource(0)
+        }
+
 
         // Handle Button
         holder._ibDelete.setOnClickListener {

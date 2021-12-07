@@ -43,6 +43,7 @@ class HomeActivity : AppCompatActivity() {
             if (current_user.desainer == "1") {
                 val intent = Intent(this@HomeActivity, DesainerProfActivity::class.java)
                 intent.putExtra("current_user", current_user)
+                intent.putExtra("desainer", current_user)
                 startActivity(intent)
             }
             else {
@@ -55,7 +56,8 @@ class HomeActivity : AppCompatActivity() {
         _btnDesainer.setOnClickListener {
             var user = User("Vincent", "", "YqFsvj0IRUQYCw3fW8stCNkhOH72", "1")
             val intent = Intent(this@HomeActivity, DesainerProfActivity::class.java)
-            intent.putExtra("current_user", user)
+            intent.putExtra("current_user", current_user)
+            intent.putExtra("desainer", user)
             startActivity(intent)
         }
 

@@ -95,6 +95,8 @@ class Upload : Fragment() {
 
             val post = dcPost(userId, str, tanggal)
             val uuid = GenerateUUID.generate()
+            _progressBar.incrementProgressBy(10)
+
 
 
 
@@ -102,21 +104,30 @@ class Upload : Fragment() {
                 .set(post)
                 .addOnSuccessListener {
                     Log.d("Firestore", "Successfully add post" + uuid)
+                    _progressBar.incrementProgressBy(20)
 
                     // Upload to Storage
                     val bitmap = (_ivFile.drawable as BitmapDrawable).bitmap
                     val baos = ByteArrayOutputStream()
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
                     val data  = baos.toByteArray()
+                    _progressBar.incrementProgressBy(20)
+
 
                     val storageRef = storage.reference
                     val imageRef = storageRef.child("images/" + uuid )
+                    _progressBar.incrementProgressBy(20)
 
 
                     var uploadTask = imageRef.putBytes(data)
                     uploadTask
                         .addOnSuccessListener {
+                            _progressBar.incrementProgressBy(30)
                             Toast.makeText(context, "Upload Berhasil", Toast.LENGTH_SHORT).show()
+                            //  Clear the form
+                            _ivFile.setImageResource(0)
+                            _etCaption.setText("")
+                            _progressBar.setProgress(0)
                             Log.d("Storage", it.metadata.toString())
                         }
                         .addOnFailureListener {

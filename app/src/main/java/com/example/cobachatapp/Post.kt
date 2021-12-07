@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -37,6 +40,8 @@ class Post : Fragment() {
     private var _dataPosts = arrayListOf<dcPost>()
 
     private lateinit var _rvPosts: RecyclerView
+    private lateinit var _progressBarCircular: ProgressBar
+    private lateinit var _tvPostEmpty: TextView
 
     // Firebase Services
     private var firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -63,14 +68,24 @@ class Post : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         _rvPosts = view.findViewById(R.id.rvPosts)
+        _progressBarCircular = view.findViewById(R.id.progressBarCircular)
+        _tvPostEmpty = view.findViewById(R.id.tvPostEmpty)
+        _tvPostEmpty.isGone = true
+
 
         ReadData()
     }
 
     fun ReadData() {
-        val storageRef = storage.reference
-        firestore.collection("tbPosts").get()
+        Log.d("Firestore", "Reading data")
+        firestore.collection("tbPosts").whereEqualTo("userId", user?.userId).get()
             .addOnSuccessListener { result ->
+                if (result.size() == 0) {
+                    _progressBarCircular.isGone = true
+                    _tvPostEmpty.isGone = false
+                    return@addOnSuccessListener
+                }
+                _id.clear()
                 _username.clear()
                 _tanggal.clear()
                 _caption.clear()
@@ -78,15 +93,14 @@ class Post : Fragment() {
 
 
                 for (document in result) {
-                    if (document.data.get("userId") == user?.userId) {
-                        _id.add(document.id)
-                        _username.add(user?.userName.toString())
-                        _tanggal.add(document.data.get("tanggal").toString())
-                        _caption.add(document.data.get("caption").toString())
-                        var b: ByteArray = byteArrayOf(0x0)
-                        _image.add(b)
-                    }
+                    _id.add(document.id)
+                    _username.add(user?.userName.toString())
+                    _tanggal.add(document.data.get("tanggal").toString())
+                    _caption.add(document.data.get("caption").toString())
+                    var b: ByteArray = byteArrayOf(0x0)
+                    _image.add(b)
                 }
+                Log.d("Storage", "Reading images")
                 var wait = 0
                 for(id in _id.indices) {
                     var storageRef = storage.reference
@@ -97,12 +111,15 @@ class Post : Fragment() {
                             _image.set(id, it)
                             wait += 1
                             if (wait >= _id.size) {
+                                _progressBarCircular.isGone = true
                                 DataToDataClass()
                                 TampilkanData()
                             }
                         }
                         .addOnFailureListener {
+
                             Log.d("Storage", "Failure to get image")
+
                         }
                 }
 
@@ -110,18 +127,6 @@ class Post : Fragment() {
             }
     }
 
-    fun ReadImage(uuid: String, index: Int) {
-        var storageRef = storage.reference
-        var imageRef = storageRef.child("images/" + uuid)
-        val ONE_MEGABYTE: Long = 1024 * 1024
-        imageRef.getBytes(ONE_MEGABYTE)
-            .addOnSuccessListener {
-                _image.set(index, it)
-            }
-            .addOnFailureListener {
-                Log.d("Storage", "Failure to get image")
-            }
-    }
 
     fun DataToDataClass() {
         for(position in _username.indices) {
@@ -131,22 +136,25 @@ class Post : Fragment() {
     }
 
     fun HapusData(uuid: String) {
-        firestore.collection("tbPosts").document(uuid).delete()
+        var storageRef = storage.reference
+        var imageRef = storageRef.child("images/" + uuid)
+        imageRef.delete()
             .addOnSuccessListener {
-                var storageRef = storage.reference
-                var imageRef = storageRef.child("images/" + uuid)
-                imageRef.delete()
+                firestore.collection("tbPosts").document(uuid).delete()
                     .addOnSuccessListener {
                         Toast.makeText(context, "Post dihapus", Toast.LENGTH_SHORT).show()
                         ReadData()
                     }
                     .addOnFailureListener {
-                        Log.d("Storage", "Failure to delete post")
+                        Log.d("Firestore", "Failure to delete post")
                     }
             }
             .addOnFailureListener {
-                Log.d("Firestore", "Failure to delete post")
+                Toast.makeText(context, "Post Gagal dihapus", Toast.LENGTH_SHORT).show()
+                Log.d("Storage", "Failure to delete post")
             }
+
+
 
     }
 
@@ -184,3 +192,4 @@ class Post : Fragment() {
             }
     }
 }
+
