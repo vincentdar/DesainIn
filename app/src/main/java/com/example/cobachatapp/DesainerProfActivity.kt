@@ -1,6 +1,8 @@
 package com.example.cobachatapp
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
@@ -16,12 +19,15 @@ import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.NullPointerException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
+import java.net.URL
 
 class DesainerProfActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
     lateinit var current_user: User
     lateinit var desainer_user: User
 
+    lateinit var _ivProfile: ImageView
     lateinit var tabLayout: TabLayout
     lateinit var viewPager2: ViewPager2
 
@@ -42,6 +48,7 @@ class DesainerProfActivity : AppCompatActivity() {
 
         val _btnFollow = findViewById<Button>(R.id.btnFollow)
         val _tvFollower = findViewById<TextView>(R.id.tvFollower)
+        val _btnAccSetting = findViewById<ImageButton>(R.id.btnAccSetting)
 
         var tabs = 1;
         var authenticated = false
@@ -51,6 +58,7 @@ class DesainerProfActivity : AppCompatActivity() {
             passing_user = current_user
             _btnFollow.isInvisible = true
             _tvFollower.isInvisible = false
+            _btnAccSetting.isGone = false
             authenticated = true
             tabs = 2
         }
@@ -58,13 +66,14 @@ class DesainerProfActivity : AppCompatActivity() {
             passing_user = desainer_user
             _btnFollow.isInvisible = false
             _tvFollower.isInvisible = true
+            _btnAccSetting.isGone = true
             authenticated = false
             tabs = 1
         }
 
         // Upper UI Handler
-        val _ivProfile = findViewById<ImageView>(R.id.ivProfile)
-        _ivProfile.setImageResource(R.drawable.yunjin)
+        _ivProfile = findViewById<ImageView>(R.id.ivProfile)
+        readProfileImage()
 
         val _tvUsername = findViewById<TextView>(R.id.tvUsername)
         _tvUsername.setText(passing_user.userName)
@@ -73,6 +82,12 @@ class DesainerProfActivity : AppCompatActivity() {
 
         _btnBack.setOnClickListener {
             val intent = Intent(this@DesainerProfActivity, HomeActivity::class.java)
+            intent.putExtra("current_user", current_user)
+            startActivity(intent)
+        }
+
+        _btnAccSetting.setOnClickListener {
+            val intent = Intent(this@DesainerProfActivity, ProfileSettingActivity::class.java)
             intent.putExtra("current_user", current_user)
             startActivity(intent)
         }
@@ -91,6 +106,17 @@ class DesainerProfActivity : AppCompatActivity() {
             tab.text = optionsArray[position]
         }.attach()
 
+    }
+
+    fun readProfileImage() {
+        val storageRef = FirebaseStorage.getInstance().reference
+        val profileRef = storageRef.child("profileImage/" + desainer_user.profileImage)
+        val ONE_MEGABYTE: Long = 1024 * 1024
+        profileRef.getBytes(ONE_MEGABYTE)
+            .addOnSuccessListener {
+                var bmp : Bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                _ivProfile.setImageBitmap(bmp)
+            }
     }
 
 

@@ -20,6 +20,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="?attr/homeAsUpIndicator" />
+
+
     </LinearLayout>
 
 
@@ -37,7 +39,7 @@
             android:id="@+id/ivProfile"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/megumin"
+            android:src="@drawable/blank_profile"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -55,6 +57,16 @@
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toTopOf="@+id/cardView" />
+
+    <ImageButton
+        android:id="@+id/btnAccSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/account_setting"
+        app:layout_constraintStart_toEndOf="@+id/btnChat"
+        app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
     <ImageButton
         android:id="@+id/btnChat"
@@ -90,11 +102,11 @@
     <Button
         android:id="@+id/btnFollow"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Follow"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintStart_toEndOf="@+id/btnChat"
         app:layout_constraintTop_toBottomOf="@+id/tvUsername" />
 
@@ -102,13 +114,13 @@
         android:id="@+id/tvFollower"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Follower: 0"
         android:textSize="16sp"
         android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/btnChat"
-        app:layout_constraintTop_toTopOf="@+id/btnChat" />
+        app:layout_constraintStart_toEndOf="@+id/btnAccSetting"
+        app:layout_constraintTop_toTopOf="@+id/btnAccSetting" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

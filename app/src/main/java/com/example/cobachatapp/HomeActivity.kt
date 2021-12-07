@@ -32,6 +32,7 @@ class HomeActivity : AppCompatActivity() {
         val _tvIsDesainer = findViewById<TextView>(R.id.tvIsDesainer)
         val _btnProf = findViewById<Button>(R.id.btnProf)
         val _btnDesainer = findViewById<Button>(R.id.btnDesainer)
+        val _btnLogout = findViewById<Button>(R.id.btnLogout)
 
         auth = FirebaseAuth.getInstance()
 
@@ -54,14 +55,19 @@ class HomeActivity : AppCompatActivity() {
         }
 
         _btnDesainer.setOnClickListener {
-            var user = User("Vincent", "", "YqFsvj0IRUQYCw3fW8stCNkhOH72", "1")
+            var user = User("Vincent", "YqFsvj0IRUQYCw3fW8stCNkhOH72",
+                "YqFsvj0IRUQYCw3fW8stCNkhOH72", "1")
             val intent = Intent(this@HomeActivity, DesainerProfActivity::class.java)
             intent.putExtra("current_user", current_user)
             intent.putExtra("desainer", user)
             startActivity(intent)
         }
 
-        current_user.desainer?.let { Log.d("Current User", it) }
+        _btnLogout.setOnClickListener {
+            auth.signOut()
+            val intent = Intent(this@HomeActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 

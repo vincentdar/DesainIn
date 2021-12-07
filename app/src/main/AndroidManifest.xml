@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CobaChatapp">
         <activity
+            android:name=".ProfileSettingActivity"
+            android:exported="true" />
+        <activity
             android:name=".ClientProfActivity"
             android:exported="true" />
         <activity
