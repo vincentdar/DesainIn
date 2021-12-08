@@ -10,6 +10,8 @@ import java.lang.NullPointerException
 
 class ClientProfActivity : AppCompatActivity() {
     lateinit var current_user: User
+    //vd kentang
+    //kentang
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
