@@ -9,9 +9,12 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.lang.NullPointerException
 
 class LoginActivity : AppCompatActivity() {
@@ -41,7 +44,13 @@ class LoginActivity : AppCompatActivity() {
             val password = _etPassword.text.toString()
 
             if (TextUtils.isEmpty(email) && TextUtils.isEmpty(password)) {
-                Toast.makeText(applicationContext, "email and password are required", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(applicationContext, "email and password are required", Toast.LENGTH_SHORT).show()
+                MotionToast.createColorToast(this, "Invalid Credentials",
+                    "Email and Password required",
+                    MotionToastStyle.WARNING,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
             }
             else {
                 auth.signInWithEmailAndPassword(email, password)
@@ -71,7 +80,13 @@ class LoginActivity : AppCompatActivity() {
 
                     }
                     else {
-                        Toast.makeText(applicationContext, "email and password invalid", Toast.LENGTH_SHORT).show()
+                        // Toast.makeText(applicationContext, "email and password invalid", Toast.LENGTH_SHORT).show()
+                        MotionToast.createColorToast(this, "Invalid Credentials",
+                            "Email and password invalid",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.SHORT_DURATION,
+                            ResourcesCompat.getFont(this, R.font.gilroy_light))
                     }
                 }
             }
@@ -86,7 +101,6 @@ class LoginActivity : AppCompatActivity() {
             auth.signOut()
             val intent = Intent(this@LoginActivity, HomeActivity::class.java)
             startActivity(intent)
-
         }
     }
 

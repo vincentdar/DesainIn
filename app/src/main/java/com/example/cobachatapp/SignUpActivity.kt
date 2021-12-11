@@ -9,18 +9,23 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.lang.NullPointerException
+
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth:FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,24 +56,54 @@ class SignUpActivity : AppCompatActivity() {
 
             var check:Int = 0;
             if (TextUtils.isEmpty(userName)) {
-                Toast.makeText(applicationContext, "username is required", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(applicationContext, "username is required", Toast.LENGTH_SHORT).show()
+                MotionToast.createColorToast(this, "Invalid Credentials",
+                    "Username is required",
+                    MotionToastStyle.WARNING,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
                 check += 1
             }
             if (TextUtils.isEmpty(email)) {
-                Toast.makeText(applicationContext, "email is required", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(applicationContext, "email is required", Toast.LENGTH_SHORT).show()
+                MotionToast.createColorToast(this, "Invalid Credentials",
+                    "Email is required",
+                    MotionToastStyle.WARNING,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
                 check += 1
             }
             if (TextUtils.isEmpty(password)) {
-                Toast.makeText(applicationContext, "password is required", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(applicationContext, "password is required", Toast.LENGTH_SHORT).show()
+                MotionToast.createColorToast(this, "Invalid Credentials",
+                    "Password is required",
+                    MotionToastStyle.WARNING,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
                 check += 1
             }
             if (TextUtils.isEmpty(confirmPassword)) {
-                Toast.makeText(applicationContext, "confirm password is required", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(applicationContext, "confirm password is required", Toast.LENGTH_SHORT).show()
+                MotionToast.createColorToast(this, "Invalid Credentials",
+                    "Confirm password is required",
+                    MotionToastStyle.WARNING,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
                 check += 1
             }
 
             if (!password.equals(confirmPassword)) {
-                Toast.makeText(applicationContext, "password not match", Toast.LENGTH_SHORT).show()
+                // Toast.makeText(applicationContext, "password not match", Toast.LENGTH_SHORT).show()
+                MotionToast.createColorToast(this, "Invalid Credentials",
+                    "Password not match",
+                    MotionToastStyle.WARNING,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
                 check += 1
             }
 
@@ -78,9 +113,6 @@ class SignUpActivity : AppCompatActivity() {
                 _etPassword.setText("")
                 _etConfirmPassword.setText("")
                 registerUser(userName, email, password)
-            }
-            else {
-                Toast.makeText(applicationContext, "validation failed", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -112,16 +144,22 @@ class SignUpActivity : AppCompatActivity() {
                             startActivity(intent)
 
                             Log.d("Firestore", "Save data success")
-                            Toast.makeText(applicationContext, "Success creating Firestore reference", Toast.LENGTH_LONG).show()
+                            // Toast.makeText(applicationContext, "Success creating Firestore reference", Toast.LENGTH_LONG).show()
                         }
                         .addOnFailureListener {
                             Log.d("Firestore", "Save data failed")
-                            Toast.makeText(applicationContext, "Failed to create Firestore reference", Toast.LENGTH_LONG).show()
+                            // Toast.makeText(applicationContext, "Failed to create Firestore reference", Toast.LENGTH_LONG).show()
                         }
                 }
                 else {
                     Log.d("Auth", "Failed to create user")
-                    Toast.makeText(applicationContext, "Failed to create user", Toast.LENGTH_LONG).show()
+                    // Toast.makeText(applicationContext, "Failed to create user", Toast.LENGTH_LONG).show()
+                    MotionToast.createColorToast(this, "Error",
+                        "Failed to create user",
+                        MotionToastStyle.ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.SHORT_DURATION,
+                        ResourcesCompat.getFont(this, R.font.gilroy_light))
                 }
             }
     }

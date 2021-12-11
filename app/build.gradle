@@ -53,4 +53,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.google.firebase:firebase-auth:16.0.2'
     implementation 'com.google.firebase:firebase-storage-ktx'
+
+    // Motion Toast
+    implementation 'com.github.Spikeysanju:MotionToast:1.4'
 }

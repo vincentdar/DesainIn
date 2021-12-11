@@ -14,12 +14,15 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toFile
 import androidx.core.view.isInvisible
 import com.example.cobachatapp.Helper.DateHelper
 import com.example.cobachatapp.Helper.GenerateUUID
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
@@ -98,56 +101,97 @@ class Upload : Fragment() {
             _progressBar.incrementProgressBy(10)
 
 
+            val TEN_MEGABYTE: Long = 10 * 1024 * 1024
+            // Upload to Storage
+            val bitmap = (_ivFile.drawable as BitmapDrawable).bitmap
+            val baos = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+            val data  = baos.toByteArray()
+            _progressBar.incrementProgressBy(20)
+
+            Log.d("BYTEARRAY SIZE", data.size.toString())
+            if (data.size <= TEN_MEGABYTE)
+            {
+                firestore.collection("tbPosts").document(uuid)
+                    .set(post)
+                    .addOnSuccessListener {
+                        Log.d("Firestore", "Successfully add post" + uuid)
+                        _progressBar.incrementProgressBy(20)
+
+                        val storageRef = storage.reference
+                        val imageRef = storageRef.child("images/" + uuid)
+                        _progressBar.incrementProgressBy(20)
 
 
-            firestore.collection("tbPosts").document(uuid)
-                .set(post)
-                .addOnSuccessListener {
-                    Log.d("Firestore", "Successfully add post" + uuid)
-                    _progressBar.incrementProgressBy(20)
+                        var uploadTask = imageRef.putBytes(data)
+                        uploadTask
+                            .addOnSuccessListener {
+                                _progressBar.incrementProgressBy(30)
+                                // Toast.makeText(context, "Upload Berhasil", Toast.LENGTH_SHORT).show()
+                                MotionToast.createColorToast(requireActivity(), "Success",
+                                    "Upload Berhasil",
+                                    MotionToastStyle.SUCCESS,
+                                    MotionToast.GRAVITY_BOTTOM,
+                                    MotionToast.SHORT_DURATION,
+                                    ResourcesCompat.getFont(requireActivity(), R.font.gilroy_light))
+                                //  Clear the form
+                                _ivFile.setImageResource(0)
+                                _etCaption.setText("")
+                                _progressBar.setProgress(0)
+                                Log.d("Storage", it.metadata.toString())
+                            }
+                            .addOnFailureListener {
+                                // Delete Firestore Posts
+                                firestore.collection("tbPosts").document(uuid)
+                                    .delete()
+                                    .addOnSuccessListener {
+                                        // Toast.makeText(context, "Upload Gagal", Toast.LENGTH_SHORT).show()
+                                        MotionToast.createColorToast(requireActivity(), "Error",
+                                            "Upload Gagal",
+                                            MotionToastStyle.ERROR,
+                                            MotionToast.GRAVITY_BOTTOM,
+                                            MotionToast.SHORT_DURATION,
+                                            ResourcesCompat.getFont(requireActivity(), R.font.gilroy_light))
+                                        _ivFile.setImageResource(0)
+                                        _etCaption.setText("")
+                                        _progressBar.setProgress(0)
+                                    }
+                                    .addOnFailureListener {
+                                        Toast.makeText(
+                                            context,
+                                            "Firebase Bermasalah",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        Log.d("Firebase", it.message.toString())
+                                    }
+                                Log.d("Storage", it.toString())
+                            }
 
-                    // Upload to Storage
-                    val bitmap = (_ivFile.drawable as BitmapDrawable).bitmap
-                    val baos = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-                    val data  = baos.toByteArray()
-                    _progressBar.incrementProgressBy(20)
 
 
-                    val storageRef = storage.reference
-                    val imageRef = storageRef.child("images/" + uuid )
-                    _progressBar.incrementProgressBy(20)
 
-
-                    var uploadTask = imageRef.putBytes(data)
-                    uploadTask
-                        .addOnSuccessListener {
-                            _progressBar.incrementProgressBy(30)
-                            Toast.makeText(context, "Upload Berhasil", Toast.LENGTH_SHORT).show()
-                            //  Clear the form
-                            _ivFile.setImageResource(0)
-                            _etCaption.setText("")
-                            _progressBar.setProgress(0)
-                            Log.d("Storage", it.metadata.toString())
-                        }
-                        .addOnFailureListener {
-                            // Delete Firestore Posts
-                            firestore.collection("tbPosts").document(uuid)
-                                .delete()
-                                .addOnSuccessListener {
-                                    Toast.makeText(context, "Upload Gagal", Toast.LENGTH_SHORT).show()
-                                }
-                                .addOnFailureListener {
-                                    Toast.makeText(context, "Firebase Bermasalah", Toast.LENGTH_SHORT).show()
-                                    Log.d("Firebase", it.message.toString())
-                                }
-                            Log.d("Storage", it.toString())
-                        }
-                }
-                .addOnFailureListener {
-                    Toast.makeText(context, "Upload Gagal", Toast.LENGTH_SHORT).show()
-                    Log.d("Firestore", it.message.toString())
-                }
+                    }
+                    .addOnFailureListener {
+                        // Toast.makeText(context, "Upload Gagal", Toast.LENGTH_SHORT).show()
+                        MotionToast.createColorToast(requireActivity(), "Error",
+                            "Upload Gagal",
+                            MotionToastStyle.ERROR,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.SHORT_DURATION,
+                            ResourcesCompat.getFont(requireActivity(), R.font.gilroy_light))
+                        Log.d("Firestore", it.message.toString())
+                    }
+            }
+            else {
+                // Toast.makeText(context, "File terlalu besar ( > 10 MB )", Toast.LENGTH_LONG).show()
+                MotionToast.createColorToast(requireActivity(), "Warning",
+                    "File terlalu besar ( < 1 MB)",
+                    MotionToastStyle.WARNING,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(requireActivity(), R.font.gilroy_light))
+                _progressBar.setProgress(0)
+            }
 
         }
     }
