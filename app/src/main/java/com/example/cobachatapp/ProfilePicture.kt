@@ -16,10 +16,13 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.io.ByteArrayOutputStream
 
 // TODO: Rename parameter arguments, choose names that match
@@ -114,7 +117,13 @@ class ProfilePicture : Fragment() {
                                 val displayProfileUpdates = UserProfileChangeRequest.Builder().setPhotoUri(it).build()
 
                                 auth.currentUser!!.updateProfile(displayProfileUpdates)
-                                Toast.makeText(context, "Upload Profile Image Berhasil", Toast.LENGTH_SHORT).show()
+                                //Toast.makeText(context, "Upload Profile Image Berhasil", Toast.LENGTH_SHORT).show()
+                                MotionToast.createColorToast(requireActivity(), "Success",
+                                    "Upload Profile Image Berhasil",
+                                    MotionToastStyle.SUCCESS,
+                                    MotionToast.GRAVITY_BOTTOM,
+                                    MotionToast.SHORT_DURATION,
+                                    ResourcesCompat.getFont(requireActivity(), R.font.gilroy_light))
                             }
 
 
@@ -125,6 +134,12 @@ class ProfilePicture : Fragment() {
                 }
                 .addOnFailureListener {
                     Log.d("Firestore", "Failed to update profileImage")
+                    MotionToast.createColorToast(requireActivity(), "Error",
+                        "Upload Profile Image Gagal",
+                        MotionToastStyle.ERROR,
+                        MotionToast.GRAVITY_BOTTOM,
+                        MotionToast.SHORT_DURATION,
+                        ResourcesCompat.getFont(requireActivity(), R.font.gilroy_light))
                 }
 
 

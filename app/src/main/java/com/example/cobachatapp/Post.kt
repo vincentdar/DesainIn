@@ -1,5 +1,6 @@
 package com.example.cobachatapp
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,11 +10,14 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -105,8 +109,8 @@ class Post : Fragment() {
                 for(id in _id.indices) {
                     var storageRef = storage.reference
                     var imageRef = storageRef.child("images/" + _id[id])
-                    val ONE_MEGABYTE: Long = 1024 * 1024
-                    imageRef.getBytes(ONE_MEGABYTE)
+                    val TEN_MEGABYTE: Long = 10 * 1024 * 1024
+                    imageRef.getBytes(TEN_MEGABYTE)
                         .addOnSuccessListener {
                             _image.set(id, it)
                             wait += 1
@@ -142,7 +146,13 @@ class Post : Fragment() {
             .addOnSuccessListener {
                 firestore.collection("tbPosts").document(uuid).delete()
                     .addOnSuccessListener {
-                        Toast.makeText(context, "Post dihapus", Toast.LENGTH_SHORT).show()
+                        // Toast.makeText(context, "Post dihapus", Toast.LENGTH_SHORT).show()
+                        MotionToast.createColorToast(requireActivity(), "Success",
+                            "Post berhasil dihapus",
+                            MotionToastStyle.SUCCESS,
+                            MotionToast.GRAVITY_BOTTOM,
+                            MotionToast.SHORT_DURATION,
+                            ResourcesCompat.getFont(requireActivity(), R.font.gilroy_light))
                         ReadData()
                     }
                     .addOnFailureListener {

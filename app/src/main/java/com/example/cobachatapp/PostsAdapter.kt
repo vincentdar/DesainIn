@@ -69,6 +69,8 @@ class PostsAdapter (private val listPosts: ArrayList<dcPost>,
 
     }
 
+
+
     override fun getItemCount(): Int {
         return listPosts.size
     }
