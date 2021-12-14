@@ -18,7 +18,7 @@ class Feed : AppCompatActivity() {
     val username = mutableListOf<String>()
     val caption = mutableListOf<String>()
     val date = mutableListOf<String>()
-    val dcFeed = ArrayList<dcFeed>()
+    val d = ArrayList<dcFeed>()
 
     //database
     private var db:FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -39,7 +39,7 @@ class Feed : AppCompatActivity() {
                 caption[position],
                 date[position]
             )
-            dcFeed.add(data)
+            d.add(data)
         }
     }
 
@@ -50,7 +50,7 @@ class Feed : AppCompatActivity() {
                 user_id.clear()
                 caption.clear()
                 date.clear()
-                dcFeed.clear()
+                d.clear()
                 for (doc in result){
                     val doc_user_id = doc.data.get("userId").toString()
                     val doc_caption = doc.data.get("caption").toString()
@@ -70,7 +70,7 @@ class Feed : AppCompatActivity() {
 
     fun ShowData(){
         rvNotes.layoutManager = LinearLayoutManager(this)
-        val notesAdapter = FeedAdapter(dcFeed)
+        val notesAdapter = FeedAdapter(d)
         rvNotes.adapter = notesAdapter
     }
 }
