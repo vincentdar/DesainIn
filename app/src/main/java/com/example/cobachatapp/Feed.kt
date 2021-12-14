@@ -1,6 +1,5 @@
 package com.example.cobachatapp
 
-import android.graphics.Insets.add
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +7,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebasedemo.FeedAdapter
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 
 class Feed : AppCompatActivity() {
 
@@ -18,7 +16,7 @@ class Feed : AppCompatActivity() {
     val username = mutableListOf<String>()
     val caption = mutableListOf<String>()
     val date = mutableListOf<String>()
-    val d = ArrayList<dcFeed>()
+    val dc_feed = ArrayList<dcFeed>()
 
     //database
     private var db:FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -39,7 +37,7 @@ class Feed : AppCompatActivity() {
                 caption[position],
                 date[position]
             )
-            d.add(data)
+            dc_feed.add(data)
         }
     }
 
@@ -50,7 +48,7 @@ class Feed : AppCompatActivity() {
                 user_id.clear()
                 caption.clear()
                 date.clear()
-                d.clear()
+                dc_feed.clear()
                 for (doc in result){
                     val doc_user_id = doc.data.get("userId").toString()
                     val doc_caption = doc.data.get("caption").toString()
@@ -70,7 +68,7 @@ class Feed : AppCompatActivity() {
 
     fun ShowData(){
         rvNotes.layoutManager = LinearLayoutManager(this)
-        val notesAdapter = FeedAdapter(d)
+        val notesAdapter = FeedAdapter(dc_feed)
         rvNotes.adapter = notesAdapter
     }
 }
