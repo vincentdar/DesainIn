@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Username"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:id="@+id/tv_username"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:layout_marginLeft="@dimen/dimen_16"/>
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/dimen_16"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintLeft_toLeftOf="@id/tv_username"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="@dimen/dimen_16"
+        app:layout_constraintTop_toBottomOf="@id/tv_username"
+        android:src="@drawable/megumin"
+        android:id="@+id/iv_feed"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Caption"
+        android:layout_marginTop="@dimen/dimen_16"
+        android:id="@+id/tv_caption"
+        app:layout_constraintLeft_toLeftOf="@id/tv_username"
+        app:layout_constraintTop_toBottomOf="@id/iv_feed"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_date"
+        app:layout_constraintLeft_toLeftOf="@id/tv_caption"
+        app:layout_constraintTop_toBottomOf="@id/tv_caption"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:text="2 days ago"
+        android:layout_marginBottom="@dimen/dimen_16"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
