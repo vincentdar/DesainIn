@@ -33,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
         val _btnProf = findViewById<Button>(R.id.btnProf)
         val _btnDesainer = findViewById<Button>(R.id.btnDesainer)
         val _btnLogout = findViewById<Button>(R.id.btnLogout)
+        val _btnFeed = findViewById<Button>(R.id.btnFeed)
 
         auth = FirebaseAuth.getInstance()
 
@@ -66,6 +67,11 @@ class HomeActivity : AppCompatActivity() {
         _btnLogout.setOnClickListener {
             auth.signOut()
             val intent = Intent(this@HomeActivity, LoginActivity::class.java)
+            startActivity(intent)
+        }
+
+        _btnFeed.setOnClickListener{
+            val intent = Intent(this@HomeActivity, Feed::class.java)
             startActivity(intent)
         }
 
