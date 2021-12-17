@@ -7,15 +7,17 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.cobachatapp.R
-import com.example.cobachatapp.dcFeed
+import com.example.cobachatapp.dcCommission
+import org.w3c.dom.Text
 
-class FeedAdapter (private val listNotes : ArrayList<dcFeed>):
-    RecyclerView.Adapter<FeedAdapter.ListViewHolder>(){
+class CommissionAdapter (private val listNotes : ArrayList<dcCommission>):
+    RecyclerView.Adapter<CommissionAdapter.ListViewHolder>(){
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var tv_user_id : TextView = itemView.findViewById(R.id.tv_client_name)
-        var iv_feed : ImageView = itemView.findViewById(R.id.iv_feed)
-        var tv_caption : TextView = itemView.findViewById(R.id.tv_caption)
+        var tv_title : TextView = itemView.findViewById(R.id.tv_designer_name)
+        var tv_client_name : TextView = itemView.findViewById(R.id.tv_client)
+        var tv_designer_name : TextView = itemView.findViewById(R.id.tv_designer_name)
+        var tv_desc : TextView = itemView.findViewById(R.id.tv_desc)
         var tv_date : TextView = itemView.findViewById(R.id.tv_date)
     }
 
@@ -27,9 +29,11 @@ class FeedAdapter (private val listNotes : ArrayList<dcFeed>):
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         var notes = listNotes[position]
-        holder.tv_user_id.setText(notes.feed_user_id)
-        holder.tv_caption.setText(notes.feed_caption)
-        holder.tv_date.setText(notes.feed_date)
+        holder.tv_title.setText(notes.comm_title)
+        holder.tv_client_name.setText(notes.comm_client_name)
+        holder.tv_designer_name.setText(notes.comm_designer_name)
+        holder.tv_desc.setText(notes.comm_desc)
+        holder.tv_date.setText(notes.comm_date)
     }
 
     override fun getItemCount(): Int {
