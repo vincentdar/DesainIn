@@ -139,21 +139,19 @@ class SignUpActivity : AppCompatActivity() {
                     firestore.collection("tbUsers").document(userId)
                         .set(data)
                         .addOnSuccessListener {
+                            StaticHolder.set_current_user(data)
+
                             val intent = Intent(this@SignUpActivity, HomeActivity::class.java)
-                            intent.putExtra("current_user", data)
                             startActivity(intent)
 
                             Log.d("Firestore", "Save data success")
-                            // Toast.makeText(applicationContext, "Success creating Firestore reference", Toast.LENGTH_LONG).show()
                         }
                         .addOnFailureListener {
                             Log.d("Firestore", "Save data failed")
-                            // Toast.makeText(applicationContext, "Failed to create Firestore reference", Toast.LENGTH_LONG).show()
                         }
                 }
                 else {
                     Log.d("Auth", "Failed to create user")
-                    // Toast.makeText(applicationContext, "Failed to create user", Toast.LENGTH_LONG).show()
                     MotionToast.createColorToast(this, "Error",
                         "Failed to create user",
                         MotionToastStyle.ERROR,

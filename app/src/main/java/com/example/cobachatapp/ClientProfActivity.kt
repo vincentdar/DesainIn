@@ -21,7 +21,7 @@ class ClientProfActivity : AppCompatActivity() {
         setContentView(R.layout.activity_client_prof)
 
         // Get current user data, make sure the home activity has filtered the null user data
-        current_user = intent.getParcelableExtra("current_user")!!
+        current_user = StaticHolder.get_current_user()
 
         // Upper UI handler
         val _ivProfile = findViewById<ImageView>(R.id.ivProfile)
