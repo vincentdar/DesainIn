@@ -26,7 +26,7 @@
         android:layout_marginRight="@dimen/dimen_16"
         app:layout_constraintTop_toBottomOf="@id/tv_client_name"
         android:src="@drawable/megumin"
-        android:id="@+id/iv_feed"/>
+        android:id="@+id/iv_feed_pic"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
         android:layout_marginTop="@dimen/dimen_16"
         android:id="@+id/tv_caption"
         app:layout_constraintLeft_toLeftOf="@id/tv_client_name"
-        app:layout_constraintTop_toBottomOf="@id/iv_feed"/>
+        app:layout_constraintTop_toBottomOf="@id/iv_feed_pic"/>
 
     <TextView
         android:layout_width="wrap_content"

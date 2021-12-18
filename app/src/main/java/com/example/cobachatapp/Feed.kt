@@ -1,5 +1,6 @@
 package com.example.cobachatapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +13,7 @@ class Feed : AppCompatActivity() {
 
     //rv data
     lateinit var rvNotes: RecyclerView
+    lateinit var soon_to_be_passed_user : User
     val user_id = mutableListOf<String>()
     val username = mutableListOf<String>()
     val caption = mutableListOf<String>()
@@ -39,6 +41,29 @@ class Feed : AppCompatActivity() {
             )
             dc_feed.add(data)
         }
+    }
+
+    fun PassUser(pass_user : String){
+        db.collection("tbUsers")
+            .whereEqualTo("userId", pass_user)
+            .get()
+            .addOnSuccessListener { result ->
+                for(doc in result){
+                    val data = User(
+                        doc.data.get("userName").toString(),
+                        doc.data.get("profileImage").toString(),
+                        doc.data.get("userId").toString(),
+                        doc.data.get("desainer").toString()
+                    )
+                    soon_to_be_passed_user = data
+                    Log.d("feed_intent", data.userName.toString())
+
+                    //intent
+                    val intent = Intent(this@Feed, DesainerProfActivity::class.java)
+                    intent.putExtra("desainer", soon_to_be_passed_user)
+                    startActivity(intent)
+                }
+            }
     }
 
     private fun ReadDataFeed(){
@@ -70,5 +95,17 @@ class Feed : AppCompatActivity() {
         rvNotes.layoutManager = LinearLayoutManager(this)
         val notesAdapter = FeedAdapter(dc_feed)
         rvNotes.adapter = notesAdapter
+
+        notesAdapter.setOnItemClickCallback(object : FeedAdapter.OnItemClickCallback{
+            override fun OnImageClicked(data: dcFeed){
+                Log.d("feed_click", "OnImageClicked is clicked")
+                PassUser(data.feed_user_id.toString())
+            }
+
+            override fun OnUserNameClicked(data: dcFeed){
+                Log.d("feed_click", "OnUserNameClicked is clicked")
+                PassUser(data.feed_user_id.toString())
+            }
+        })
     }
 }
