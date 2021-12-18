@@ -18,6 +18,7 @@ import www.sanju.motiontoast.MotionToastStyle
 import java.lang.NullPointerException
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var db: FirebaseDatabase
 
     private lateinit var auth:FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
