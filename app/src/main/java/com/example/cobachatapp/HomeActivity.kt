@@ -64,6 +64,7 @@ class HomeActivity : AppCompatActivity() {
 
         _btnLogout.setOnClickListener {
             auth.signOut()
+            StaticHolder.set_guest()
             val intent = Intent(this@HomeActivity, LoginActivity::class.java)
             startActivity(intent)
         }
