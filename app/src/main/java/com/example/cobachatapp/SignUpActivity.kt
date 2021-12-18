@@ -1,20 +1,16 @@
 package com.example.cobachatapp
 
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
@@ -23,7 +19,7 @@ import java.lang.NullPointerException
 
 class SignUpActivity : AppCompatActivity() {
 
-    private lateinit var auth:FirebaseAuth
+    private lateinit var auth : FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
 
@@ -124,41 +120,73 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     private fun registerUser(userName:String, email:String, password:String) {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) {
-                if (it.isSuccessful) {
-                    val user:FirebaseUser? = auth.currentUser
-                    val userId:String = user!!.uid
+        firestore.collection("tbUsers").get()
+            .addOnSuccessListener {
+                var usernameAvailable = true
+                for (document in it) {
+                    if (document.get("userName").toString() == userName) {
+                        usernameAvailable = false
+                        break
+                    }
+                }
+                if (usernameAvailable) {
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(this) {
+                            if (it.isSuccessful) {
+                                val user:FirebaseUser? = auth.currentUser
+                                val userId:String = user!!.uid
 
-                    val data = User(userName, "", userId, "0")
+                                val data = User(userName, "", userId, "0")
 
-                    // Set Display name
-                    val profile_updates = UserProfileChangeRequest.Builder().setDisplayName(userName).build()
-                    user!!.updateProfile(profile_updates)
+                                // Set Display name
+                                val profile_updates = UserProfileChangeRequest.Builder().setDisplayName(userName).build()
+                                user!!.updateProfile(profile_updates)
 
-                    firestore.collection("tbUsers").document(userId)
-                        .set(data)
-                        .addOnSuccessListener {
-                            StaticHolder.set_current_user(data)
+                                firestore.collection("tbUsers").document(userId)
+                                    .set(data)
+                                    .addOnSuccessListener {
+                                        StaticHolder.set_current_user(data)
 
-                            val intent = Intent(this@SignUpActivity, HomeActivity::class.java)
-                            startActivity(intent)
+                                        val intent = Intent(this@SignUpActivity, HomeActivity::class.java)
+                                        startActivity(intent)
 
-                            Log.d("Firestore", "Save data success")
-                        }
-                        .addOnFailureListener {
-                            Log.d("Firestore", "Save data failed")
+                                        Log.d("Firestore", "Save data success")
+                                    }
+                                    .addOnFailureListener {
+                                        Log.d("Firestore", "Save data failed")
+                                    }
+                            }
+                            else {
+                                Log.d("Auth", "Failed to create user")
+                                MotionToast.createColorToast(this, "Error",
+                                    "Failed to create user",
+                                    MotionToastStyle.ERROR,
+                                    MotionToast.GRAVITY_BOTTOM,
+                                    MotionToast.SHORT_DURATION,
+                                    ResourcesCompat.getFont(this, R.font.gilroy_light))
+                            }
                         }
                 }
                 else {
-                    Log.d("Auth", "Failed to create user")
+                    Log.d("Auth", "Username already exists")
                     MotionToast.createColorToast(this, "Error",
-                        "Failed to create user",
+                        "Username already exists",
                         MotionToastStyle.ERROR,
                         MotionToast.GRAVITY_BOTTOM,
                         MotionToast.SHORT_DURATION,
                         ResourcesCompat.getFont(this, R.font.gilroy_light))
                 }
             }
+            .addOnFailureListener {
+                Log.d("Firestore", "Failure to get users")
+                MotionToast.createColorToast(this, "Error",
+                    "Firestore failure",
+                    MotionToastStyle.ERROR,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
+            }
+
+
     }
 }
