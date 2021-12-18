@@ -33,7 +33,7 @@ class Commission : AppCompatActivity() {
     }
 
     fun CommToDataClass(){
-        for(position in client_name.indices){
+        for(position in title.indices){
             val data = dcCommission(
                 title[position],
                 client_name[position],
@@ -56,15 +56,14 @@ class Commission : AppCompatActivity() {
                 date.clear()
                 dc_comm.clear()
                 for (doc in result){
-                    val doc_title = doc.data.get("commission").toString()
-                    val doc_client_name = doc.data.get("client_id").toString()
-                    val doc_designer_name = doc.data.get("client_id").toString()
-                    val doc_desc = doc.data.get("client_id").toString()
-                    val doc_date = doc.data.get("date").toString()
+                    val doc_title = doc.data.get("Commission").toString()
+                    val doc_client_name = doc.data.get("ClientId").toString()
+                    val doc_designer_name = doc.data.get("DesignerId").toString()
+                    val doc_desc = doc.data.get("Desc").toString()
+                    val doc_date = doc.data.get("Date").toString()
                     title.add(doc_title)
                     client_name.add(doc_client_name)
                     designer_name.add(doc_designer_name)
-                    desc.add(doc_desc)
                     desc.add(doc_desc)
                     date.add(doc_date)
                 }

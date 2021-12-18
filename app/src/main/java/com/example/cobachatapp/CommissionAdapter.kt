@@ -23,7 +23,7 @@ class CommissionAdapter (private val listNotes : ArrayList<dcCommission>):
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         var view : View =
-            LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_feed,parent,false)
+            LayoutInflater.from(parent.context).inflate(R.layout.recylerview_commission,parent,false)
         return  ListViewHolder(view)
     }
 

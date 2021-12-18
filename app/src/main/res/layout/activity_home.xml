@@ -53,5 +53,10 @@
         android:layout_height="wrap_content"
         android:text="Feed"
         android:gravity="center"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Commission"
+        android:id="@+id/btnCommission"/>
 
 </LinearLayout>
