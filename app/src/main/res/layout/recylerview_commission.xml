@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:maxWidth="170dp"
+    android:layout_marginHorizontal="@dimen/dimen_8"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Commission"
+        android:id="@+id/tv_commission"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Client            : "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_commission"
+        android:layout_marginTop="8dp"
+        android:id="@+id/tv_client" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Designer      :"
+        android:id="@+id/tv_designer"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="@id/tv_client"
+        app:layout_constraintTop_toBottomOf="@id/tv_client" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UserName"
+        android:id="@+id/tv_client_name"
+        app:layout_constraintLeft_toRightOf="@id/tv_client"
+        app:layout_constraintTop_toTopOf="@id/tv_client"
+        android:layout_marginLeft="@dimen/dimen_8"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Designer"
+        android:id="@+id/tv_designer_name"
+        app:layout_constraintLeft_toLeftOf="@id/tv_client_name"
+        app:layout_constraintTop_toTopOf="@id/tv_designer"/>
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:maxWidth="200dp"
+        android:id="@+id/tv_desc"
+        app:layout_constraintTop_toBottomOf="@id/tv_designer"
+        app:layout_constraintLeft_toLeftOf="@id/tv_designer"
+        android:ellipsize="none"
+        android:maxLines="3"
+        android:text="lorem ipsum bleght afjwiefw efwefw efefe fiwj  dqw "
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_date"
+        app:layout_constraintTop_toBottomOf="@id/tv_desc"
+        app:layout_constraintLeft_toLeftOf="@id/tv_desc"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
