@@ -67,8 +67,10 @@ class LoginActivity : AppCompatActivity() {
                                     val desainer = it.get("desainer").toString()
                                     val data = User(userName, profileImage, userId, desainer)
                                     Log.d("Firestore", "Success to get current user data")
+
+                                    StaticHolder.set_current_user(data)
+
                                     val intent = Intent(this@LoginActivity, HomeActivity::class.java)
-                                    intent.putExtra("current_user", data)
                                     startActivity(intent)
                                 }
                                 .addOnFailureListener {

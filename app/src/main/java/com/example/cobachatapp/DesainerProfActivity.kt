@@ -42,7 +42,7 @@ class DesainerProfActivity : AppCompatActivity() {
 
 
         // Get current user data, make sure the home activity has filtered the null user data
-        current_user = intent.getParcelableExtra("current_user")!!
+        current_user = StaticHolder.get_current_user()
         desainer_user = intent.getParcelableExtra("desainer")!!
 
 

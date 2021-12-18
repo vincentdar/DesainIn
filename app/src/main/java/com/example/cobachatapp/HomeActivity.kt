@@ -22,10 +22,7 @@ class HomeActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_home)
 
-        val parcel_user = intent.getParcelableExtra<User>("current_user")
-        if (parcel_user != null) {
-            current_user = parcel_user
-        }
+        current_user = StaticHolder.get_current_user()
 
         val _tvUsername = findViewById<TextView>(R.id.tvUsername)
         val _tvUsertoken = findViewById<TextView>(R.id.tvUsertoken)
