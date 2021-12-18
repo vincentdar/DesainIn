@@ -8,6 +8,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.core.content.res.ResourcesCompat
+import com.example.cobachatapp.Helper.Dump
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -142,9 +143,39 @@ class SignUpActivity : AppCompatActivity() {
                                 val profile_updates = UserProfileChangeRequest.Builder().setDisplayName(userName).build()
                                 user!!.updateProfile(profile_updates)
 
+                                var dump = Dump()
+
                                 firestore.collection("tbUsers").document(userId)
                                     .set(data)
                                     .addOnSuccessListener {
+                                        firestore.collection("tbFollowing").document(userId).set(dump)
+                                            .addOnSuccessListener {
+                                                firestore.collection("tbFollowing").document(userId).collection("users").document(userId).set(dump)
+                                                    .addOnSuccessListener {
+                                                        Log.d("Firestore", "Save data success")
+                                                    }
+                                                    .addOnFailureListener {
+                                                        Log.d("Firestore", "Save data failed")
+                                                    }
+                                            }
+                                            .addOnFailureListener {
+                                                Log.d("Firestore", "Save data failed")
+                                            }
+
+                                        firestore.collection("tbFollower").document(userId).set(dump)
+                                            .addOnSuccessListener {
+                                                firestore.collection("tbFollower").document(userId).collection("users").document(userId).set(dump)
+                                                    .addOnSuccessListener {
+                                                        Log.d("Firestore", "Save data success")
+                                                    }
+                                                    .addOnFailureListener {
+                                                        Log.d("Firestore", "Save data failed")
+                                                    }
+                                            }
+                                            .addOnFailureListener {
+                                                Log.d("Firestore", "Save data failed")
+                                            }
+
                                         StaticHolder.set_current_user(data)
 
                                         val intent = Intent(this@SignUpActivity, HomeActivity::class.java)
@@ -155,6 +186,8 @@ class SignUpActivity : AppCompatActivity() {
                                     .addOnFailureListener {
                                         Log.d("Firestore", "Save data failed")
                                     }
+
+
                             }
                             else {
                                 Log.d("Auth", "Failed to create user")

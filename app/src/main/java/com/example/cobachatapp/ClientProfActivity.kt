@@ -1,17 +1,20 @@
 package com.example.cobachatapp
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.firebase.storage.FirebaseStorage
 import java.lang.NullPointerException
 
 class ClientProfActivity : AppCompatActivity() {
     lateinit var current_user: User
-    //vd kentang
-    //kentang
+    lateinit var _ivProfile: ImageView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
@@ -24,8 +27,13 @@ class ClientProfActivity : AppCompatActivity() {
         current_user = StaticHolder.get_current_user()
 
         // Upper UI handler
-        val _ivProfile = findViewById<ImageView>(R.id.ivProfile)
+        _ivProfile = findViewById<ImageView>(R.id.ivProfile)
+        readProfileImage()
+
         val _tvUsername = findViewById<TextView>(R.id.tvUsername)
+
+        val _btnChat = findViewById<ImageButton>(R.id.btnChat)
+        val _btnAccSetting = findViewById<ImageButton>(R.id.btnAccSetting)
         _tvUsername.setText(current_user.userName)
 
         val _btnBack = findViewById<ImageButton>(R.id.btnBack)
@@ -34,5 +42,22 @@ class ClientProfActivity : AppCompatActivity() {
             intent.putExtra("current_user", current_user)
             startActivity(intent)
         }
+
+        _btnAccSetting.setOnClickListener {
+            val intent = Intent(this@ClientProfActivity, ProfileSettingActivity::class.java)
+            intent.putExtra("current_user", current_user)
+            startActivity(intent)
+        }
+    }
+
+    fun readProfileImage() {
+        val storageRef = FirebaseStorage.getInstance().reference
+        val profileRef = storageRef.child("profileImage/" + current_user.profileImage)
+        val ONE_MEGABYTE: Long = 1024 * 1024
+        profileRef.getBytes(ONE_MEGABYTE)
+            .addOnSuccessListener {
+                var bmp : Bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                _ivProfile.setImageBitmap(bmp)
+            }
     }
 }
