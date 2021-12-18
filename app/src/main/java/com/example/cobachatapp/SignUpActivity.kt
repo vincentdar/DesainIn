@@ -25,8 +25,7 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth:FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
-
-
+    private lateinit var mDbRef: DatabaseReference
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +122,12 @@ class SignUpActivity : AppCompatActivity() {
 
     }
 
+    //for realtime database only
+    private fun addUsertoDatabase(userName:String, email:String, uid: String){
+        mDbRef = FirebaseDatabase.getInstance().getReference()
+        mDbRef.child("user").child(uid).setValue(UserForRealtime(userName, email, uid))
+    }
+
     private fun registerUser(userName:String, email:String, password:String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) {
@@ -131,6 +136,9 @@ class SignUpActivity : AppCompatActivity() {
                     val userId:String = user!!.uid
 
                     val data = User(userName, "", userId, "0")
+
+                    //insert to realtime database
+                    addUsertoDatabase(userName, email, user.uid!!)
 
                     // Set Display name
                     val profile_updates = UserProfileChangeRequest.Builder().setDisplayName(userName).build()

@@ -35,6 +35,13 @@
         android:gravity="center"/>
 
     <Button
+        android:id="@+id/btnGallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        android:gravity="center"/>
+
+    <Button
         android:id="@+id/btnDesainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

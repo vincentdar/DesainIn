@@ -12,6 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CobaChatapp">
         <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GalleryActivity"
+            android:exported="false" />
+        <activity
             android:name=".Commission"
             android:exported="false" />
         <activity
