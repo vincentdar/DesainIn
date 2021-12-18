@@ -3,7 +3,6 @@ package com.example.firebasedemo
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +25,7 @@ class FeedAdapter (private val listNotes : ArrayList<dcFeed>):
 
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var tv_user_id : TextView = itemView.findViewById(R.id.tv_client_name)
+        var tv_username : TextView = itemView.findViewById(R.id.tv_client_name)
         var iv_feed_pic : ImageView = itemView.findViewById(R.id.iv_feed_pic)
         var tv_caption : TextView = itemView.findViewById(R.id.tv_caption)
         var tv_date : TextView = itemView.findViewById(R.id.tv_date)
@@ -40,13 +39,13 @@ class FeedAdapter (private val listNotes : ArrayList<dcFeed>):
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         var notes = listNotes[position]
-        holder.tv_user_id.setText(notes.feed_user_id)
+        holder.tv_username.setText(notes.feed_username)
         holder.tv_caption.setText(notes.feed_caption)
         holder.tv_date.setText(notes.feed_date)
         holder.iv_feed_pic.setOnClickListener{
             onItemClickCallback.OnImageClicked(listNotes[position])
         }
-        holder.tv_user_id.setOnClickListener{
+        holder.tv_username.setOnClickListener{
             onItemClickCallback.OnUserNameClicked(listNotes[position])
         }
     }
