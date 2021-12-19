@@ -10,4 +10,6 @@ class User (
     var profileImage:String?,
     var userId:String?,
     var desainer:String?
+
+
 ) : Parcelable

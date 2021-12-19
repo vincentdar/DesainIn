@@ -3,6 +3,7 @@ package com.example.cobachatapp
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,25 +12,34 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.viewpager2.widget.ViewPager2
+import com.example.cobachatapp.Helper.Dump
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.lang.NullPointerException
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.net.URL
 
 class DesainerProfActivity : AppCompatActivity() {
     lateinit var auth: FirebaseAuth
+    lateinit var firestore: FirebaseFirestore
     lateinit var current_user: User
     lateinit var desainer_user: User
 
     lateinit var _ivProfile: ImageView
     lateinit var tabLayout: TabLayout
     lateinit var viewPager2: ViewPager2
+
+    lateinit var _btnFollow: Button
+    var followed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +49,7 @@ class DesainerProfActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_desainer_profile_page)
         auth = FirebaseAuth.getInstance()
-
+        firestore = FirebaseFirestore.getInstance()
 
         // Get current user data, make sure the home activity has filtered the null user data
         current_user = StaticHolder.get_current_user()
@@ -47,7 +57,7 @@ class DesainerProfActivity : AppCompatActivity() {
         Log.d("feed_intent", desainer_user.userName.toString())
 
 
-        val _btnFollow = findViewById<Button>(R.id.btnFollow)
+        _btnFollow = findViewById<Button>(R.id.btnFollow)
         val _tvFollower = findViewById<TextView>(R.id.tvFollower)
         val _btnAccSetting = findViewById<ImageButton>(R.id.btnAccSetting)
 
@@ -80,9 +90,10 @@ class DesainerProfActivity : AppCompatActivity() {
         _tvUsername.setText(passing_user.userName)
 
         val _btnBack = findViewById<ImageButton>(R.id.btnBack)
+        val _btnChat = findViewById<ImageButton>(R.id.btnChat)
 
         _btnBack.setOnClickListener {
-            val intent = Intent(this@DesainerProfActivity, HomeActivity::class.java)
+            val intent = Intent(this@DesainerProfActivity, Feed::class.java)
             intent.putExtra("current_user", current_user)
             startActivity(intent)
         }
@@ -93,11 +104,19 @@ class DesainerProfActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        _btnChat.setOnClickListener {
+            val intent = Intent(this@DesainerProfActivity, GalleryActivity::class.java)
+            startActivity(intent)
+        }
+
+        CheckFollower(current_user, desainer_user)
+        _btnFollow.setOnClickListener {
+            FollowUnfollow()
+        }
+
         // Lower UI Handler
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager2)
-
-
 
         val adapter = TabProfileAdapter( supportFragmentManager, lifecycle, passing_user, tabs, authenticated)
         viewPager2.adapter = adapter
@@ -107,6 +126,15 @@ class DesainerProfActivity : AppCompatActivity() {
             tab.text = optionsArray[position]
         }.attach()
 
+    }
+
+    fun FollowUnfollow() {
+        if (followed == true) {
+            Unfollow(current_user, desainer_user)
+        }
+        else {
+            follow(current_user, desainer_user)
+        }
     }
 
     fun readProfileImage() {
@@ -120,5 +148,87 @@ class DesainerProfActivity : AppCompatActivity() {
             }
     }
 
+    fun follow(client: User, desainer: User) {
+        var dump_desainer = Dump(desainer.userId)
+        var dump_client = Dump(client.userId)
+
+        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").document(desainer.userId.toString()).set(dump_desainer)
+            .addOnSuccessListener {
+                Log.d("Following", "Berhasil tbFollowing")
+                CheckFollower(client, desainer)
+                MotionToast.createColorToast(this, "Follow",
+                    "Berhasil Follow",
+                    MotionToastStyle.SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
+            }
+            .addOnFailureListener {
+                Log.d("Following", "Gagal tbFollowing")
+            }
+
+        firestore.collection("tbFollower").document(desainer.userId.toString()).collection("users").document(client.userId.toString()).set(dump_client)
+            .addOnSuccessListener {
+                Log.d("Following", "Berhasil tbFollower")
+            }
+            .addOnFailureListener {
+                Log.d("Following", "Gagal tbFollower")
+            }
+    }
+
+    fun Unfollow(client: User, desainer: User) {
+        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").document(desainer.userId.toString()).delete()
+            .addOnSuccessListener {
+                Log.d("Following", "Berhasil tbFollowing")
+                CheckFollower(client, desainer)
+                MotionToast.createColorToast(this, "Unfollow",
+                    "Berhasil unfollow",
+                    MotionToastStyle.DELETE,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
+            }
+            .addOnFailureListener {
+                Log.d("Following", "Gagal tbFollowing")
+            }
+
+        firestore.collection("tbFollower").document(desainer.userId.toString()).collection("users").document(client.userId.toString()).delete()
+            .addOnSuccessListener {
+                Log.d("Following", "Berhasil tbFollower")
+            }
+            .addOnFailureListener {
+                Log.d("Following", "Gagal tbFollower")
+            }
+    }
+
+    fun CheckFollower(client: User, desainer: User) {
+        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").get()
+            .addOnSuccessListener {
+                var exist = false
+                Log.d("MYID", client.userId.toString())
+                for ( document in it) {
+                    Log.d("DOCUMENT", document.id)
+                    if (document.id == desainer.userId) {
+                        exist = true
+                        break
+                    }
+                }
+
+                if (exist) {
+                    _btnFollow.setText("Followed")
+                    _btnFollow.setBackgroundColor(Color.parseColor("#808080"))
+                    followed = true
+                }
+                else {
+                    _btnFollow.setText("Follow")
+                    _btnFollow.setBackgroundColor(Color.parseColor("#FFD523"))
+                    followed = false
+                }
+
+            }
+            .addOnFailureListener {
+                Log.d("Following", "FAILURE")
+            }
+    }
 
 }
