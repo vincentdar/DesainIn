@@ -1,5 +1,5 @@
 package com.example.cobachatapp.Helper
 
-class Dump {
-    var exists: String? = "yes"
-}
+class Dump (
+    var userId: String?
+)
