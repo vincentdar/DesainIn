@@ -187,7 +187,7 @@ class SignUpActivity : AppCompatActivity() {
 
                                         StaticHolder.set_current_user(data)
 
-                                        val intent = Intent(this@SignUpActivity, HomeActivity::class.java)
+                                        val intent = Intent(this@SignUpActivity, Feed::class.java)
                                         startActivity(intent)
 
                                         Log.d("Firestore", "Save data success")

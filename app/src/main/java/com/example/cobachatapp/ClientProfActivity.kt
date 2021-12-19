@@ -55,7 +55,7 @@ class ClientProfActivity : AppCompatActivity() {
 
         val _btnBack = findViewById<ImageButton>(R.id.btnBack)
         _btnBack.setOnClickListener {
-            val intent = Intent(this@ClientProfActivity, HomeActivity::class.java)
+            val intent = Intent(this@ClientProfActivity, Feed::class.java)
             intent.putExtra("current_user", current_user)
             startActivity(intent)
         }
@@ -63,6 +63,11 @@ class ClientProfActivity : AppCompatActivity() {
         _btnAccSetting.setOnClickListener {
             val intent = Intent(this@ClientProfActivity, ProfileSettingActivity::class.java)
             intent.putExtra("current_user", current_user)
+            startActivity(intent)
+        }
+
+        _btnChat.setOnClickListener {
+            val intent = Intent(this@ClientProfActivity, GalleryActivity::class.java)
             startActivity(intent)
         }
 
