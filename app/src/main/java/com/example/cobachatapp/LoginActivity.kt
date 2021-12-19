@@ -70,8 +70,9 @@ class LoginActivity : AppCompatActivity() {
 
                                     StaticHolder.set_current_user(data)
 
-                                    val intent = Intent(this@LoginActivity, HomeActivity::class.java)
+                                    val intent = Intent(this@LoginActivity, Feed::class.java)
                                     startActivity(intent)
+
                                 }
                                 .addOnFailureListener {
                                     Log.d("Firestore", "Failure to get current user data")

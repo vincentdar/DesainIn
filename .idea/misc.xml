@@ -14,24 +14,13 @@
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/recyclerview_feed.xml" value="0.264" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/recyclerview_posts.xml" value="0.25416666666666665" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/recylerview_marketplace.xml" value="0.264" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/drawable/background_shape.xml" value="0.23489583333333333" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/drawable/bottom_shpe.xml" value="0.23489583333333333" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/drawable/receive_drawable.xml" value="0.23489583333333333" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/drawable/send_drawable.xml" value="0.23489583333333333" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/activity_chat.xml" value="0.21875" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/activity_client_prof.xml" value="0.21875" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/activity_gallery.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/activity_home.xml" value="0.33" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/activity_login.xml" value="0.21875" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/delete_layout.xml" value="0.21875" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/fragment_upload.xml" value="0.21875" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/item_layout.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/item_profile.xml" value="0.38697916666666665" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/receive_msg.xml" value="0.21875" />
-        <entry key="..\:/Users/micha/AndroidStudioProjects/DesainIn/app/src/main/res/layout/send_msg.xml" value="0.21875" />
+        <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/drawable/commission.xml" value="0.2703125" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/drawable/edittext_background.xml" value="0.2703125" />
+        <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/layout/activity_chat.xml" value="0.2" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/layout/activity_client_prof.xml" value="0.264" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/layout/activity_desainer_profile_page.xml" value="0.264" />
+        <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/layout/activity_feed.xml" value="0.264" />
+        <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/layout/activity_gallery.xml" value="0.264" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/layout/activity_home.xml" value="0.536" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/layout/activity_main.xml" value="0.17798913043478262" />

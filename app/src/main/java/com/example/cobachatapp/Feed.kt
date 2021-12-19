@@ -1,15 +1,18 @@
 package com.example.cobachatapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebasedemo.FeedAdapter
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class Feed : AppCompatActivity() {
-
+    private lateinit var auth: FirebaseAuth
     //rv data
     lateinit var rvNotes: RecyclerView
     val user_id = mutableListOf<String>()
@@ -20,13 +23,55 @@ class Feed : AppCompatActivity() {
 
     //database
     private var db:FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var current_user = User("Guest",  "", "", "0")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
-
+        auth = FirebaseAuth.getInstance()
         rvNotes = findViewById(R.id.rv_feed)
         ReadDataFeed()
+
+        val _ibProfile = findViewById<ImageButton>(R.id.ibProfile)
+        val _ibChat = findViewById<ImageButton>(R.id.ibChat)
+        val _ibCommission = findViewById<ImageButton>(R.id.ibCommission)
+        val _ibExit = findViewById<ImageButton>(R.id.ibExit)
+
+        current_user = StaticHolder.get_current_user()
+
+        _ibProfile.setOnClickListener {
+            if (current_user.desainer == "1") {
+                val intent = Intent(this@Feed, DesainerProfActivity::class.java)
+                intent.putExtra("current_user", current_user)
+                intent.putExtra("desainer", current_user)
+                startActivity(intent)
+            }
+            else {
+                val intent = Intent(this@Feed, ClientProfActivity::class.java)
+                intent.putExtra("current_user", current_user)
+                startActivity(intent)
+            }
+        }
+
+        _ibChat.setOnClickListener{
+            val intent = Intent(this@Feed, GalleryActivity::class.java)
+            startActivity(intent)
+        }
+
+
+        _ibExit.setOnClickListener {
+            auth.signOut()
+            StaticHolder.set_guest()
+            val intent = Intent(this@Feed, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
+
+        _ibCommission.setOnClickListener{
+            val intent = Intent(this@Feed, Commission::class.java)
+            startActivity(intent)
+        }
 
     }
 
@@ -71,4 +116,9 @@ class Feed : AppCompatActivity() {
         val notesAdapter = FeedAdapter(dc_feed)
         rvNotes.adapter = notesAdapter
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
 }

@@ -89,9 +89,10 @@ class DesainerProfActivity : AppCompatActivity() {
         _tvUsername.setText(passing_user.userName)
 
         val _btnBack = findViewById<ImageButton>(R.id.btnBack)
+        val _btnChat = findViewById<ImageButton>(R.id.btnChat)
 
         _btnBack.setOnClickListener {
-            val intent = Intent(this@DesainerProfActivity, HomeActivity::class.java)
+            val intent = Intent(this@DesainerProfActivity, Feed::class.java)
             intent.putExtra("current_user", current_user)
             startActivity(intent)
         }
@@ -99,6 +100,11 @@ class DesainerProfActivity : AppCompatActivity() {
         _btnAccSetting.setOnClickListener {
             val intent = Intent(this@DesainerProfActivity, ProfileSettingActivity::class.java)
             intent.putExtra("current_user", current_user)
+            startActivity(intent)
+        }
+
+        _btnChat.setOnClickListener {
+            val intent = Intent(this@DesainerProfActivity, GalleryActivity::class.java)
             startActivity(intent)
         }
 
@@ -116,8 +122,6 @@ class DesainerProfActivity : AppCompatActivity() {
         // Lower UI Handler
         tabLayout = findViewById(R.id.tabLayout)
         viewPager2 = findViewById(R.id.viewPager2)
-
-
 
         val adapter = TabProfileAdapter( supportFragmentManager, lifecycle, passing_user, tabs, authenticated)
         viewPager2.adapter = adapter
@@ -141,14 +145,16 @@ class DesainerProfActivity : AppCompatActivity() {
     }
 
     fun follow(client: User, desainer: User) {
-        var dump = Dump()
-        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").document(desainer.userId.toString()).set(dump)
+        var dump_desainer = Dump(desainer.userId)
+        var dump_client = Dump(client.userId)
+
+        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").document(desainer.userId.toString()).set(dump_desainer)
             .addOnSuccessListener {
                 Log.d("Following", "Berhasil tbFollowing")
 //                CheckFollower(client, desainer)
                 MotionToast.createColorToast(this, "Follow",
                     "Berhasil Follow",
-                    MotionToastStyle.WARNING,
+                    MotionToastStyle.SUCCESS,
                     MotionToast.GRAVITY_BOTTOM,
                     MotionToast.SHORT_DURATION,
                     ResourcesCompat.getFont(this, R.font.gilroy_light))
@@ -157,7 +163,7 @@ class DesainerProfActivity : AppCompatActivity() {
                 Log.d("Following", "Gagal tbFollowing")
             }
 
-        firestore.collection("tbFollower").document(desainer.userId.toString()).collection("users").document(client.userId.toString()).set(dump)
+        firestore.collection("tbFollower").document(desainer.userId.toString()).collection("users").document(client.userId.toString()).set(dump_client)
             .addOnSuccessListener {
                 Log.d("Following", "Berhasil tbFollower")
             }
