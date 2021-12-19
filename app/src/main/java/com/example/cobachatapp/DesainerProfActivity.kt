@@ -141,8 +141,10 @@ class DesainerProfActivity : AppCompatActivity() {
     }
 
     fun follow(client: User, desainer: User) {
-        var dump = Dump()
-        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").document(desainer.userId.toString()).set(dump)
+        var dump_desainer = Dump(desainer.userId)
+        var dump_client = Dump(client.userId)
+
+        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").document(desainer.userId.toString()).set(dump_desainer)
             .addOnSuccessListener {
                 Log.d("Following", "Berhasil tbFollowing")
 //                CheckFollower(client, desainer)
@@ -157,7 +159,7 @@ class DesainerProfActivity : AppCompatActivity() {
                 Log.d("Following", "Gagal tbFollowing")
             }
 
-        firestore.collection("tbFollower").document(desainer.userId.toString()).collection("users").document(client.userId.toString()).set(dump)
+        firestore.collection("tbFollower").document(desainer.userId.toString()).collection("users").document(client.userId.toString()).set(dump_client)
             .addOnSuccessListener {
                 Log.d("Following", "Berhasil tbFollower")
             }

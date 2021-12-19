@@ -12,6 +12,8 @@ import com.example.cobachatapp.Helper.Dump
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
@@ -150,7 +152,7 @@ class SignUpActivity : AppCompatActivity() {
                                 val profile_updates = UserProfileChangeRequest.Builder().setDisplayName(userName).build()
                                 user!!.updateProfile(profile_updates)
 
-                                var dump = Dump()
+                                var dump = Dump(userId)
 
                                 firestore.collection("tbUsers").document(userId)
                                     .set(data)
