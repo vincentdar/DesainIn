@@ -108,15 +108,9 @@ class DesainerProfActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-//        CheckFollower(current_user, desainer_user)
+        CheckFollower(current_user, desainer_user)
         _btnFollow.setOnClickListener {
-            if (followed) {
-
-            }
-            else {
-                follow(current_user, desainer_user)
-            }
-
+            FollowUnfollow()
         }
 
         // Lower UI Handler
@@ -131,6 +125,15 @@ class DesainerProfActivity : AppCompatActivity() {
             tab.text = optionsArray[position]
         }.attach()
 
+    }
+
+    fun FollowUnfollow() {
+        if (followed == true) {
+            Unfollow(current_user, desainer_user)
+        }
+        else {
+            follow(current_user, desainer_user)
+        }
     }
 
     fun readProfileImage() {
@@ -151,7 +154,7 @@ class DesainerProfActivity : AppCompatActivity() {
         firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").document(desainer.userId.toString()).set(dump_desainer)
             .addOnSuccessListener {
                 Log.d("Following", "Berhasil tbFollowing")
-//                CheckFollower(client, desainer)
+                CheckFollower(client, desainer)
                 MotionToast.createColorToast(this, "Follow",
                     "Berhasil Follow",
                     MotionToastStyle.SUCCESS,
@@ -172,15 +175,59 @@ class DesainerProfActivity : AppCompatActivity() {
             }
     }
 
-//    fun CheckFollower(client: User, desainer: User) : Boolean {
-//        firestore.collection("tbFollowing").document(desainer.userId.toString()).collection("users").document(client.userId.toString()).get()
-//            .addOnSuccessListener {
-//                _btnFollow.setText("Followed")
-//                _btnFollow.setBackgroundColor(Color.parseColor("#808080"))
-//            }
-//            .addOnFailureListener {
-//
-//            }
-//    }
+    fun Unfollow(client: User, desainer: User) {
+        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").document(desainer.userId.toString()).delete()
+            .addOnSuccessListener {
+                Log.d("Following", "Berhasil tbFollowing")
+                CheckFollower(client, desainer)
+                MotionToast.createColorToast(this, "Unfollow",
+                    "Berhasil unfollow",
+                    MotionToastStyle.DELETE,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this, R.font.gilroy_light))
+            }
+            .addOnFailureListener {
+                Log.d("Following", "Gagal tbFollowing")
+            }
+
+        firestore.collection("tbFollower").document(desainer.userId.toString()).collection("users").document(client.userId.toString()).delete()
+            .addOnSuccessListener {
+                Log.d("Following", "Berhasil tbFollower")
+            }
+            .addOnFailureListener {
+                Log.d("Following", "Gagal tbFollower")
+            }
+    }
+
+    fun CheckFollower(client: User, desainer: User) {
+        firestore.collection("tbFollowing").document(client.userId.toString()).collection("users").get()
+            .addOnSuccessListener {
+                var exist = false
+                Log.d("MYID", client.userId.toString())
+                for ( document in it) {
+                    Log.d("DOCUMENT", document.id)
+                    if (document.id == desainer.userId) {
+                        exist = true
+                        break
+                    }
+                }
+
+                if (exist) {
+                    _btnFollow.setText("Followed")
+                    _btnFollow.setBackgroundColor(Color.parseColor("#808080"))
+                    followed = true
+                }
+                else {
+                    _btnFollow.setText("Follow")
+                    _btnFollow.setBackgroundColor(Color.parseColor("#FFD523"))
+                    followed = false
+                }
+
+            }
+            .addOnFailureListener {
+                Log.d("Following", "FAILURE")
+            }
+    }
 
 }
