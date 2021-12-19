@@ -14,8 +14,8 @@ class CommissionAdapter (private val listNotes : ArrayList<dcCommission>):
     RecyclerView.Adapter<CommissionAdapter.ListViewHolder>(){
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var tv_title : TextView = itemView.findViewById(R.id.tv_designer_name)
-        var tv_client_name : TextView = itemView.findViewById(R.id.tv_client)
+        var tv_title : TextView = itemView.findViewById(R.id.tv_commission)
+        var tv_client_name : TextView = itemView.findViewById(R.id.tv_client_name)
         var tv_designer_name : TextView = itemView.findViewById(R.id.tv_designer_name)
         var tv_desc : TextView = itemView.findViewById(R.id.tv_desc)
         var tv_date : TextView = itemView.findViewById(R.id.tv_date)
@@ -39,4 +39,5 @@ class CommissionAdapter (private val listNotes : ArrayList<dcCommission>):
     override fun getItemCount(): Int {
         return listNotes.size
     }
+
 }
