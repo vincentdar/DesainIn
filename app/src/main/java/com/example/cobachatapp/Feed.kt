@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.ProgressBar
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.firebasedemo.FeedAdapter
@@ -16,9 +18,12 @@ class Feed : AppCompatActivity() {
     lateinit var soon_to_be_passed_user: User
     val user_id = mutableListOf<String>()
     val username = mutableListOf<String>()
+    val pic = mutableListOf<String>()
     val caption = mutableListOf<String>()
     val date = mutableListOf<String>()
     val dc_feed = ArrayList<dcFeed>()
+
+    private lateinit var _progressBarCircular: ProgressBar
 
     //database
     private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -28,6 +33,7 @@ class Feed : AppCompatActivity() {
         setContentView(R.layout.activity_feed)
 
         rvNotes = findViewById(R.id.rv_feed)
+        _progressBarCircular = findViewById(R.id.progress_bar_feed)
         ReadDataFeed()
 
     }
@@ -37,6 +43,7 @@ class Feed : AppCompatActivity() {
             val data = dcFeed(
                 user_id[position],
                 username[position],
+                pic[position],
                 caption[position],
                 date[position]
             )
@@ -49,6 +56,7 @@ class Feed : AppCompatActivity() {
             .whereEqualTo("userId", pass_user)
             .get()
             .addOnSuccessListener { result ->
+
                 for (doc in result) {
                     val data = User(
                         doc.data.get("userName").toString(),
@@ -72,14 +80,20 @@ class Feed : AppCompatActivity() {
             .addOnSuccessListener { result_post ->
                 db.collection("tbUsers").get()
                     .addOnSuccessListener { result_user ->
+                        if(result_user.size() == 0){
+                            _progressBarCircular.isGone = true
+                        }
                         Log.d("feed_firebase", "listening")
                         user_id.clear()
                         caption.clear()
+                        pic.clear()
                         date.clear()
                         dc_feed.clear()
                         for (doc_post in result_post) {
+                            Log.d("feed_firebase", doc_post.id)
                             val doc_user_id = doc_post.data.get("userId").toString()
                             val doc_caption = doc_post.data.get("caption").toString()
+                            val doc_pic = doc_post.id
                             val doc_date = doc_post.data.get("tanggal").toString()
                             for (doc_user in result_user) {
                                 if(doc_user_id == doc_user.data.get("userId").toString()) {
@@ -87,11 +101,13 @@ class Feed : AppCompatActivity() {
                                     username.add(doc_username)
                                 }
                             }
+                            pic.add(doc_pic)
                             user_id.add(doc_user_id)
                             caption.add(doc_caption)
                             date.add(doc_date)
                             Log.d("feed_firebase", "listening")
                         }
+                        _progressBarCircular.isGone = true
                         FeedToDataClass()
                         Log.d("feed firebase", "read data - size : " + result_post.size())
                         ShowData()
@@ -100,6 +116,7 @@ class Feed : AppCompatActivity() {
                         Log.d("feed_firebase", it.toString())
                     }
             }
+
             .addOnFailureListener {
                 Log.d("feed firebase", it.message.toString())
             }
@@ -109,6 +126,7 @@ class Feed : AppCompatActivity() {
         rvNotes.layoutManager = LinearLayoutManager(this)
         val notesAdapter = FeedAdapter(dc_feed)
         rvNotes.adapter = notesAdapter
+
 
         notesAdapter.setOnItemClickCallback(object : FeedAdapter.OnItemClickCallback {
             override fun OnImageClicked(data: dcFeed) {
@@ -122,4 +140,5 @@ class Feed : AppCompatActivity() {
             }
         })
     }
+
 }

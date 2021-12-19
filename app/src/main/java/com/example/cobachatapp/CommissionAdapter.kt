@@ -39,4 +39,5 @@ class CommissionAdapter (private val listNotes : ArrayList<dcCommission>):
     override fun getItemCount(): Int {
         return listNotes.size
     }
+
 }
