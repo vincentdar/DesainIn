@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.Gallery
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
@@ -32,6 +33,7 @@ class HomeActivity : AppCompatActivity() {
         val _btnLogout = findViewById<Button>(R.id.btnLogout)
         val _btnFeed = findViewById<Button>(R.id.btnFeed)
         val _btnComm = findViewById<Button>(R.id.btnCommission)
+        val _btnSearch = findViewById<Button>(R.id.btnGallery)
 
         auth = FirebaseAuth.getInstance()
 
@@ -53,6 +55,11 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
+        _btnSearch.setOnClickListener{
+            val intent = Intent(this@HomeActivity, GalleryActivity::class.java)
+            startActivity(intent)
+        }
+
         _btnDesainer.setOnClickListener {
             var user = User("Vincent", "YqFsvj0IRUQYCw3fW8stCNkhOH72",
                 "YqFsvj0IRUQYCw3fW8stCNkhOH72", "1")
@@ -64,6 +71,7 @@ class HomeActivity : AppCompatActivity() {
 
         _btnLogout.setOnClickListener {
             auth.signOut()
+            StaticHolder.set_guest()
             val intent = Intent(this@HomeActivity, LoginActivity::class.java)
             startActivity(intent)
         }
