@@ -10,8 +10,16 @@ import android.widget.EditText
 import androidx.core.content.res.ResourcesCompat
 import com.example.cobachatapp.Helper.DateHelper
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import www.sanju.motiontoast.MotionToast
 import www.sanju.motiontoast.MotionToastStyle
+
+
+const val  TOPIC = "/topics/myTopic"
 
 class AddCommission : AppCompatActivity() {
 
@@ -25,13 +33,18 @@ class AddCommission : AppCompatActivity() {
     lateinit var data: dcAddComm
     lateinit var userId: String
 
+    val TAG = "AddCommission"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_commission)
 
+
         et_title = findViewById<EditText>(R.id.et_title)
         et_desc = findViewById<EditText>(R.id.et_desc)
         btn_send = findViewById<Button>(R.id.btn_commission)
+
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC)
 
 
 
@@ -41,6 +54,17 @@ class AddCommission : AppCompatActivity() {
             desc = et_desc.text.toString()
             date = DateHelper.getCurrentDate()
             data = dcAddComm(userId, title, date, desc, "")
+
+            if(title.isNotEmpty() && desc.isNotEmpty()){
+                PushNotification(
+                    NotificationData(title, desc),
+                    TOPIC
+                ).also {
+                    sendNotification(it)
+                }
+            }
+
+
             if (TextUtils.isEmpty(title)) {
                 MotionToast.createColorToast(
                     this, "Invalid Input",
@@ -94,6 +118,19 @@ class AddCommission : AppCompatActivity() {
                     ResourcesCompat.getFont(this, R.font.gilroy_light)
                 )
             }
+    }
+
+    private fun sendNotification(notification: PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+        try {
+            val response = RetrofitInstance.api.postNotification(notification)
+            if (response.isSuccessful){
+                Log.d(TAG, "Response: ${Gson().toJson(response)}")
+            }else{
+                Log.e(TAG, response.errorBody().toString())
+            }
+        } catch (e: Exception){
+            Log.e(TAG, e.toString())
+        }
     }
 
     override fun onBackPressed() {
