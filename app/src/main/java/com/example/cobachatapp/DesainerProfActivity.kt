@@ -34,6 +34,9 @@ class DesainerProfActivity : AppCompatActivity() {
     lateinit var current_user: User
     lateinit var desainer_user: User
 
+    lateinit var _tvFollower: TextView
+    lateinit var _tvFollowing: TextView
+
     lateinit var _ivProfile: ImageView
     lateinit var tabLayout: TabLayout
     lateinit var viewPager2: ViewPager2
@@ -58,7 +61,9 @@ class DesainerProfActivity : AppCompatActivity() {
 
 
         _btnFollow = findViewById<Button>(R.id.btnFollow)
-        val _tvFollower = findViewById<TextView>(R.id.tvFollower)
+        _tvFollower = findViewById<TextView>(R.id.tvFollower)
+        _tvFollowing = findViewById<TextView>(R.id.tvFollowing)
+        FollowingFollowerCount()
         val _btnAccSetting = findViewById<ImageButton>(R.id.btnAccSetting)
 
         var tabs = 1;
@@ -68,7 +73,6 @@ class DesainerProfActivity : AppCompatActivity() {
         if (current_user.userId == desainer_user.userId) {
             passing_user = current_user
             _btnFollow.isInvisible = true
-            _tvFollower.isInvisible = false
             _btnAccSetting.isGone = false
             authenticated = true
             tabs = 2
@@ -76,7 +80,6 @@ class DesainerProfActivity : AppCompatActivity() {
         else {
             passing_user = desainer_user
             _btnFollow.isInvisible = false
-            _tvFollower.isInvisible = true
             _btnAccSetting.isGone = true
             authenticated = false
             tabs = 1
@@ -228,6 +231,23 @@ class DesainerProfActivity : AppCompatActivity() {
             }
             .addOnFailureListener {
                 Log.d("Following", "FAILURE")
+            }
+    }
+
+    fun FollowingFollowerCount() {
+        firestore.collection("tbFollowing").document(desainer_user.userId.toString()).collection("users").whereNotEqualTo("userId", desainer_user.userId.toString()).get()
+            .addOnSuccessListener {
+                _tvFollowing.setText(it.size().toString())
+            }
+            .addOnFailureListener {
+                Log.d("Firestore", "Error following count")
+            }
+        firestore.collection("tbFollower").document(desainer_user.userId.toString()).collection("users").whereNotEqualTo("userId", desainer_user.userId.toString()).get()
+            .addOnSuccessListener {
+                _tvFollower.setText(it.size().toString())
+            }
+            .addOnFailureListener {
+                Log.d("Firestore", "Error follower count")
             }
     }
 
