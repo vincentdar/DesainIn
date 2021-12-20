@@ -34,11 +34,12 @@
         android:id="@+id/fab_add_commission"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="@dimen/dimen_8"
-        android:layout_marginBottom="@dimen/dimen_8"
-        android:src="@drawable/ic_baseline_add_24" />
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="#FFD523"
+        android:src="@drawable/ic_baseline_add_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ProgressBar
         android:layout_width="wrap_content"
