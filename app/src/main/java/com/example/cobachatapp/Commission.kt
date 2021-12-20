@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.util.Log
 import android.widget.ProgressBar
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.GridLayoutManager
@@ -21,6 +22,7 @@ class Commission : AppCompatActivity() {
 
     //rv data
     lateinit var rvNotes: RecyclerView
+    val comm_id = mutableListOf<String>()
     val title = mutableListOf<String>()
     val client_id = mutableListOf<String>()
     val client_name = mutableListOf<String>()
@@ -67,6 +69,7 @@ class Commission : AppCompatActivity() {
     fun CommToDataClass() {
         for (position in title.indices) {
             val data = dcCommission(
+                comm_id[position],
                 title[position],
                 client_id[position],
                 client_name[position],
@@ -89,6 +92,7 @@ class Commission : AppCompatActivity() {
 
                         }
                         Log.d("comm_firebase", "listening")
+                        comm_id.clear()
                         title.clear()
                         client_id.clear()
                         client_name.clear()
@@ -98,6 +102,7 @@ class Commission : AppCompatActivity() {
                         date.clear()
                         dc_comm.clear()
                         for (doc_comm in result_comm) {
+                            val doc_id = doc_comm.id
                             val doc_title = doc_comm.data.get("commission").toString()
                             val doc_client_id = doc_comm.data.get("clientId").toString()
                             val doc_designer_id = doc_comm.data.get("designerId").toString()
@@ -118,6 +123,7 @@ class Commission : AppCompatActivity() {
                             if (doc_designer_name == "no one") {
                                 designer_name.add("")
                             }
+                            comm_id.add(doc_id)
                             title.add(doc_title)
                             client_id.add(doc_client_id)
                             designer_id.add(doc_designer_id)
@@ -142,6 +148,16 @@ class Commission : AppCompatActivity() {
         rvNotes.layoutManager = GridLayoutManager(this, 2)
         val notesAdapter = CommissionAdapter(dc_comm)
         rvNotes.adapter = notesAdapter
+
+        notesAdapter.setOnItemClickCallback(object : CommissionAdapter.OnItemClickCallback{
+            override fun OnBodyClicked(data: dcCommission) {
+                Log.d("comm_click", "OnBodyClick is clicked")
+                Log.d("comm_click", data.comm_id.toString())
+                val intent = Intent(this@Commission, CommissionDetail::class.java)
+                intent.putExtra("CommissionDetail", data)
+                startActivity(intent)
+            }
+        })
     }
 
 }

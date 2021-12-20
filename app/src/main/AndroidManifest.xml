@@ -34,6 +34,9 @@
 
 
         <activity
+            android:name=".CommissionDetail"
+            android:exported="false" />
+        <activity
             android:name=".AddCommission"
             android:exported="false" />
         <activity
