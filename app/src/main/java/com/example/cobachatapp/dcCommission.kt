@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 class dcCommission(
+    var comm_id: String? = null,
     var comm_title: String? = null,
     var comm_client_id: String? = null,
     var comm_client_name: String? = null,
