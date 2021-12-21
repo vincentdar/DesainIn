@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.firebasedemo.FeedAdapter
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class Feed : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
@@ -125,7 +126,7 @@ class Feed : AppCompatActivity() {
     }
 
     private fun ReadDataFeed() {
-        db.collection("tbPosts").get()
+        db.collection("tbPosts").orderBy("tanggal", Query.Direction.DESCENDING).get()
             .addOnSuccessListener { result_post ->
                 db.collection("tbUsers").get()
                     .addOnSuccessListener { result_user ->
