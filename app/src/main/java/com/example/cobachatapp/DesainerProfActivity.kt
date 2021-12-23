@@ -251,4 +251,10 @@ class DesainerProfActivity : AppCompatActivity() {
             }
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this@DesainerProfActivity, Feed::class.java)
+        startActivity(intent)
+        finish()
+    }
 }

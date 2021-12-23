@@ -79,6 +79,12 @@ class CommissionDetail : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val intent = Intent(this@CommissionDetail, Commission::class.java)
+        startActivity(intent)
+    }
+
     fun ShowData() {
         client.setText(commission.comm_client_name)
         designer.setText(commission.comm_designer_name)
