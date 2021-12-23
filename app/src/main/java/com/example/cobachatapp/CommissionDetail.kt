@@ -71,6 +71,8 @@ class CommissionDetail : AppCompatActivity() {
                         MotionToast.SHORT_DURATION,
                         ResourcesCompat.getFont(this, R.font.gilroy_light)
                     )
+                    val intent = Intent(this@CommissionDetail, Commission::class.java)
+                    startActivity(intent)
                 }
         }
 

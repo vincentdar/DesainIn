@@ -156,6 +156,7 @@ class Commission : AppCompatActivity() {
                 val intent = Intent(this@Commission, CommissionDetail::class.java)
                 intent.putExtra("CommissionDetail", data)
                 startActivity(intent)
+                finish()
             }
         })
     }

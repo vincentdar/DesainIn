@@ -4,7 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/drawable/chat.xml" value="0.26615384615384613" />
+        <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/drawable/commission_bg.xml" value="0.16875" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.2078125" />
+        <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/drawable/send_drawable.xml" value="0.16875" />
+        <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/drawable/shape_commission.xml" value="0.16875" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/drawable/shape_feed.xml" value="0.26296296296296295" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/activity_add_commission.xml" value="0.264" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/activity_client_prof.xml" value="0.25416666666666665" />
@@ -21,6 +24,7 @@
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/recyclerview_posts.xml" value="0.25416666666666665" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/recylerview_commission.xml" value="0.4" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/recylerview_marketplace.xml" value="0.264" />
+        <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/send_msg.xml" value="0.15260416666666668" />
         <entry key="..\:/CodingStuff/AndroidProjects/DesainIn2/app/src/main/res/layout/shape_feed.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/drawable/commission.xml" value="0.2703125" />
         <entry key="..\:/Users/vince/AndroidStudioProjects/cobaChatapp/app/src/main/res/drawable/edittext_background.xml" value="0.2703125" />
