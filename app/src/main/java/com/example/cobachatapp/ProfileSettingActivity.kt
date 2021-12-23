@@ -13,19 +13,15 @@ class ProfileSettingActivity : AppCompatActivity() {
         }
         setContentView(R.layout.activity_profile_setting)
 
-        var current_user = intent.getParcelableExtra<User>("current_user")
+
 
         val mFragmentManager = supportFragmentManager
-        val mfProfilePicture = ProfilePicture()
+        val mfSettings = Settings()
 
-        val mBundle = Bundle()
-        mBundle.putParcelable("current_user", current_user)
-        mfProfilePicture.arguments = mBundle
-
-        mFragmentManager.findFragmentByTag(ProfilePicture::class.java.simpleName)
+        mFragmentManager.findFragmentByTag(Settings::class.java.simpleName)
         mFragmentManager
             .beginTransaction()
-            .add(R.id.frameContainer, mfProfilePicture, ProfilePicture::class.java.simpleName)
+            .add(R.id.frameContainer, mfSettings, Settings::class.java.simpleName)
             .commit()
     }
 }

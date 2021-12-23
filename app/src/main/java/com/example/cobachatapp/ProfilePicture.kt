@@ -81,10 +81,7 @@ class ProfilePicture : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
 
-
-        if(arguments != null) {
-            user = arguments?.getParcelable("current_user")
-        }
+        user = StaticHolder.get_current_user()
 
         _ivFile = view.findViewById(R.id.ivProfilePhoto)
         val _btnPick = view.findViewById<Button>(R.id.btnPick)
