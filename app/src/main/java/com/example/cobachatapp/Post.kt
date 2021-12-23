@@ -84,17 +84,17 @@ class Post : Fragment() {
         Log.d("Firestore", "Reading data")
         firestore.collection("tbPosts").whereEqualTo("userId", user?.userId).get()
             .addOnSuccessListener { result ->
-                if (result.size() == 0) {
-                    _progressBarCircular.isGone = true
-                    _tvPostEmpty.isGone = false
-                    return@addOnSuccessListener
-                }
                 _id.clear()
                 _username.clear()
                 _tanggal.clear()
                 _caption.clear()
                 _dataPosts.clear()
 
+                if (result.size() == 0) {
+                    _progressBarCircular.isGone = true
+                    _tvPostEmpty.isGone = false
+                    return@addOnSuccessListener
+                }
 
                 for (document in result) {
                     _id.add(document.id)
@@ -160,7 +160,6 @@ class Post : Fragment() {
                     }
             }
             .addOnFailureListener {
-                Toast.makeText(context, "Post Gagal dihapus", Toast.LENGTH_SHORT).show()
                 Log.d("Storage", "Failure to delete post")
             }
 
