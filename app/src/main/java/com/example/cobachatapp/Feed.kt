@@ -58,11 +58,13 @@ class Feed : AppCompatActivity() {
                 intent.putExtra("current_user", current_user)
                 intent.putExtra("desainer", current_user)
                 startActivity(intent)
+                finish()
             }
             else {
                 val intent = Intent(this@Feed, ClientProfActivity::class.java)
                 intent.putExtra("current_user", current_user)
                 startActivity(intent)
+                finish()
             }
         }
 
